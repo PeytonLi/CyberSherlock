@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 type NewsItem = { title: string; source: string; url: string; publishedAt: string; snippet: string };
 
-export default function NewsDrawer({ country, onClose }: { country: string | null; onClose: () => void }) {
+export default function NewsDrawer({ country, onClose, onCollapse }: { country: string | null; onClose: () => void; onCollapse?: () => void }) {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [stale, setStale] = useState(false);
   const [noKey, setNoKey] = useState(false);
@@ -37,10 +37,17 @@ export default function NewsDrawer({ country, onClose }: { country: string | nul
         }`}
       >
         <div className="flex items-center justify-between border-b p-4">
-          <h2 className="text-lg font-semibold">{country} — recent cyber incidents</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
-            ✕
-          </button>
+          <h2 className="text-lg font-semibold">{country} — AI & infrastructure cyber incidents</h2>
+          <div className="flex items-center gap-2">
+            {onCollapse && (
+              <button onClick={onCollapse} className="text-slate-400 hover:text-slate-600 text-sm" title="Collapse inline">
+                ⤡
+              </button>
+            )}
+            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="p-4">

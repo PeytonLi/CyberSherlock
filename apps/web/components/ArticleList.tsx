@@ -11,7 +11,7 @@ export default function ArticleList() {
     {
       title: "How AI could enable critical infrastructure collapse",
       author: "Li-Lian Ang",
-      source: "BlueDot Impact",
+      source: "CyberSherlock",
       href: "https://blog.bluedot.org/p/how-ai-could-enable-critical-infrastructure-collapse",
       content: `يعتمد مجتمعنا على بنية تحتية حيوية توفر المياه النظيفة، وتنقل الغذاء من المزارع إلى المتاجر، وتزود المنازل والمستشفيات بالكهرباء. وأي انقطاع مؤقت في هذه الخدمات قد يؤدي إلى خسائر بشرية أو اقتصادية جسيمة.
 

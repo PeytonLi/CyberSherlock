@@ -21,7 +21,7 @@ export async function fetchCyberNews(country: string): Promise<NewsItem[]> {
       method: "POST",
       headers: { "content-type": "application/json", "x-api-key": key },
       body: JSON.stringify({
-        query: `cybersecurity attack breach ransomware data leak ${country}`,
+        query: `AI cyber attack critical infrastructure ransomware power grid hospital water ${country}`,
         category: "news",
         type: "auto",
         numResults: 10,

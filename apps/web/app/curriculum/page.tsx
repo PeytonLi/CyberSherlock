@@ -1,7 +1,11 @@
-import { redirect } from "next/navigation";
+import ArticleList from "@/components/ArticleList";
+import MapSection from "@/components/MapSection";
 
-export const dynamic = "force-dynamic";
-
-export default function CurriculumPage() {
-  redirect("/curriculum/1/1");
+export default function ArticlesPage() {
+  return (
+    <main>
+      <ArticleList />
+      <MapSection />
+    </main>
+  );
 }
