@@ -2,5 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { --bg: #ffffff; --fg: #1a1a2e; }
-body { color: var(--fg); background: var(--bg); }
+:root {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --accent-warm: #f59e0b;
+  --surface: #f8fafc;
+  --border: #e2e8f0;
+  --navy: #0a1628;
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+.prose-slate h1 { color: var(--navy); }
+.prose-slate h2 { color: var(--navy); }
+.prose-slate a { color: var(--accent); }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 500px; }
+}
+
+.animate-marquee {
+  animation: marquee 60s linear infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-fade-in-reverse {
+  animation: fadeIn 0.4s ease-out reverse;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
