@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 type NewsItem = { title: string; source: string; url: string; publishedAt: string; snippet: string };
 
-export default function NewsDrawer({ country, onClose, onCollapse }: { country: string | null; onClose: () => void; onCollapse?: () => void }) {
+export default function NewsDrawer({ country, topic, onClose, onCollapse }: { country: string | null; topic?: string; onClose: () => void; onCollapse?: () => void }) {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [stale, setStale] = useState(false);
   const [noKey, setNoKey] = useState(false);
@@ -15,7 +15,7 @@ export default function NewsDrawer({ country, onClose, onCollapse }: { country: 
     setLoading(true);
     setItems([]);
     setNoKey(false);
-    fetch(`/api/news?country=${encodeURIComponent(country)}`)
+    fetch(`/api/news?country=${encodeURIComponent(country)}&topic=${encodeURIComponent(topic ?? "")}`)
       .then((r) => r.json())
       .then((d) => {
         setItems(d.items ?? []);
@@ -37,7 +37,9 @@ export default function NewsDrawer({ country, onClose, onCollapse }: { country: 
         }`}
       >
         <div className="flex items-center justify-between border-b p-4">
-          <h2 className="text-lg font-semibold">{country} — AI & infrastructure cyber incidents</h2>
+  const drawerLabel = topic === "email-phishing"
+    ? `${country} — AI phishing incidents`
+    : `${country} — AI & infrastructure cyber incidents`;
           <div className="flex items-center gap-2">
             {onCollapse && (
               <button onClick={onCollapse} className="text-slate-400 hover:text-slate-600 text-sm" title="Collapse inline">

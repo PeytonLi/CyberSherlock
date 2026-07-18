@@ -8,7 +8,7 @@ export default function ArticlesPage() {
       <ArticlesSidebar />
       <main className="flex-1 min-w-0">
         <ArticleList />
-        <MapSection />
+        <MapSection topic="critical-infrastructure" />
       </main>
     </div>
   );

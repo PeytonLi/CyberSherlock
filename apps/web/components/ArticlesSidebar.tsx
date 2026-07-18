@@ -5,6 +5,10 @@ import { usePathname } from "next/navigation";
 
 const ARTICLES = [
   {
+    href: "/lessons/ai-infrastructure-collapse",
+    label: "كيف يمكن للذكاء الاصطناعي أن ينهار البنية التحتية",
+  },
+  {
     href: "/lessons/critical-infrastructure-cyber-attacks",
     label: "الهجمات الإلكترونية على البنية التحتية الحيوية",
   },
@@ -14,7 +18,7 @@ const ARTICLES = [
   },
   {
     href: "/curriculum",
-    label: "كيف يمكّن الذكاء الاصطناعي انهيار البنية التحتية",
+    label: "قائمة المقالات",
   },
 ];
 

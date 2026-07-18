@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import MapSection from "@/components/MapSection";
 
 export const metadata: Metadata = {
   title: "الهجمات الإلكترونية على البنية التحتية الحيوية — CyberSherlock",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
 
 export default function CriticalInfrastructureLesson() {
   return (
+    <>
     <article className="mx-auto max-w-3xl px-6 py-16" dir="rtl" lang="ar">
       {/* Breadcrumb */}
       <nav className="mb-8 text-sm text-slate-500" dir="ltr">
@@ -347,5 +349,7 @@ export default function CriticalInfrastructureLesson() {
         </Link>
       </div>
     </article>
+    <MapSection topic="critical-infrastructure" />
+    </>
   );
 }

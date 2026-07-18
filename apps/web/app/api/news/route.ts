@@ -9,12 +9,13 @@ const dbAvailable = !!process.env.DATABASE_URL;
 
 export async function GET(req: NextRequest) {
   const country = req.nextUrl.searchParams.get("country")?.trim();
+  const topic = req.nextUrl.searchParams.get("topic")?.trim() ?? undefined;
   if (!country) return NextResponse.json({ error: "country required" }, { status: 400 });
 
   // When no DATABASE_URL, skip the DB and fetch live every time.
   if (!dbAvailable) {
     const hasKey = !!process.env.EXA_API_KEY;
-    const fetched = await fetchCyberNews(country);
+    const fetched = await fetchCyberNews(country, topic);
     return NextResponse.json({
       items: fetched.map((n) => ({ ...n, publishedAt: n.publishedAt })),
       stale: false,
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
     }
 
     const hasKey = !!process.env.EXA_API_KEY;
-    const fetched = await fetchCyberNews(country);
+    const fetched = await fetchCyberNews(country, topic);
     if (fetched.length === 0) {
       return NextResponse.json({ items: rows.map(toItem), stale: rows.length > 0, noKey: !hasKey });
     }
@@ -66,7 +67,7 @@ export async function GET(req: NextRequest) {
   } catch {
     // DB unavailable at runtime — degrade to live fetch.
     const hasKey = !!process.env.EXA_API_KEY;
-    const fetched = await fetchCyberNews(country);
+    const fetched = await fetchCyberNews(country, topic);
     return NextResponse.json({
       items: fetched.map((n) => ({ ...n, publishedAt: n.publishedAt })),
       stale: false,

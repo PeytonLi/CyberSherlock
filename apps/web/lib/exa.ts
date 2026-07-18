@@ -13,15 +13,21 @@ function ninetyDaysAgoISO(): string {
 }
 
 // Exa /search — server-only (uses EXA_API_KEY). Returns [] on any failure.
-export async function fetchCyberNews(country: string): Promise<NewsItem[]> {
+const TOPIC_QUERIES: Record<string, string> = {
+  "critical-infrastructure": "AI cyber attack critical infrastructure power grid hospital water energy",
+  "email-phishing": "AI phishing email scam social engineering deepfake",
+};
+
+export async function fetchCyberNews(country: string, topic?: string): Promise<NewsItem[]> {
   const key = process.env.EXA_API_KEY;
   if (!key) return [];
+  const topicQuery = topic && TOPIC_QUERIES[topic] ? TOPIC_QUERIES[topic] : "AI cyber attack";
   try {
     const res = await fetch("https://api.exa.ai/search", {
       method: "POST",
       headers: { "content-type": "application/json", "x-api-key": key },
       body: JSON.stringify({
-        query: `AI cyber attack critical infrastructure ransomware power grid hospital water ${country}`,
+        query: `${topicQuery} ${country}`,
         category: "news",
         type: "auto",
         numResults: 10,
