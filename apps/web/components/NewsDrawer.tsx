@@ -3,27 +3,11 @@
 import { useEffect, useState } from "react";
 
 type NewsItem = { title: string; source: string; url: string; publishedAt: string; snippet: string };
+type IncidentItem = { id: string; title: string; description: string; source: string; sourceDate: string };
 
-type Props = {
-  country: string | null;
-  topic?: string;
-  onClose: () => void;
-  onCollapse?: () => void;
-  onArticleOpen: (url: string) => void;
-  onArticlesLoaded: (country: string, items: NewsItem[]) => void;
-  readUrls: string[];
-};
-
-export default function NewsDrawer({
-  country,
-  topic,
-  onClose,
-  onCollapse,
-  onArticleOpen,
-  onArticlesLoaded,
-  readUrls,
-}: Props) {
-  const [items, setItems] = useState<NewsItem[]>([]);
+export default function NewsDrawer({ country, topic, onClose, onCollapse }: { country: string | null; topic?: string; onClose: () => void; onCollapse?: () => void }) {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [incidents, setIncidents] = useState<IncidentItem[]>([]);
   const [stale, setStale] = useState(false);
   const [noKey, setNoKey] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,31 +15,24 @@ export default function NewsDrawer({
   useEffect(() => {
     if (!country) return;
     setLoading(true);
-    setItems([]);
+    setNews([]);
+    setIncidents([]);
     setNoKey(false);
-    fetch(
-      `/api/news?country=${encodeURIComponent(country)}&topic=${encodeURIComponent(topic ?? "")}`
-    )
-      .then((r) => r.json())
-      .then((d) => {
-        const next: NewsItem[] = d.items ?? [];
-        setItems(next);
-        setStale(!!d.stale);
-        setNoKey(!!d.noKey);
-        onArticlesLoaded(country, next);
+    Promise.all([
+      fetch("/api/incidents?country=" + encodeURIComponent(country) + "&topic=" + encodeURIComponent(topic ?? "")).then(r => r.json()),
+      fetch("/api/news?country=" + encodeURIComponent(country) + "&topic=" + encodeURIComponent(topic ?? "")).then(r => r.json()),
+    ])
+      .then(([incData, newsData]) => {
+        setIncidents(incData.incidents ?? []);
+        setNews(newsData.items ?? []);
+        setStale(!!newsData.stale);
+        setNoKey(!!newsData.noKey);
       })
-      .catch(() => setItems([]))
+      .catch(() => {})
       .finally(() => setLoading(false));
-  }, [country, topic, onArticlesLoaded]);
+  }, [country]);
 
   const open = !!country;
-  const readSet = new Set(readUrls);
-  const unreadCount = items.filter((it) => !readSet.has(it.url)).length;
-
-  const drawerLabel =
-    topic === "email-phishing"
-      ? `${country} — AI phishing incidents`
-      : `${country} — AI & infrastructure cyber incidents`;
 
   return (
     <>
@@ -64,27 +41,17 @@ export default function NewsDrawer({
         className={`fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto border-l border-slate-200 bg-white shadow-xl transition-transform ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
+        dir="rtl"
       >
-        <div className="flex items-center justify-between border-b p-4">
-          <div>
-            <h2 className="text-lg font-semibold">{drawerLabel}</h2>
-            {!loading && items.length > 0 && (
-              <p className="mt-0.5 text-xs text-slate-500">
-                {unreadCount === 0 ? "All caught up" : `${unreadCount} unread`}
-              </p>
-            )}
-          </div>
+        <div className="flex items-center justify-between border-b px-4 py-3 sticky top-0 bg-white z-10">
+          <span className="font-semibold text-slate-800">{country}</span>
           <div className="flex items-center gap-2">
             {onCollapse && (
-              <button
-                onClick={onCollapse}
-                className="text-slate-400 hover:text-slate-600 text-sm"
-                title="Collapse inline"
-              >
+              <button onClick={onCollapse} className="text-slate-400 hover:text-slate-600 text-sm" title="طي العرض">
                 ⤡
               </button>
             )}
-            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
+            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="إغلاق">
               ✕
             </button>
           </div>
@@ -93,64 +60,79 @@ export default function NewsDrawer({
         <div className="p-4">
           {noKey && (
             <div className="mb-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <strong>EXA_API_KEY not set.</strong> Live news is unavailable.{" "}
+              <strong>مفتاح EXA غير مضبوط.</strong> الأخبار المباشرة غير متاحة.{" "}
               <a href="https://exa.ai" target="_blank" rel="noopener noreferrer" className="underline">
-                Get a free key from Exa
+                احصل على مفتاح مجاني من Exa
               </a>{" "}
-              and add it to your <code className="rounded bg-amber-100 px-1 text-xs">.env</code>.
+              وأضفه إلى ملف <code className="rounded bg-amber-100 px-1 text-xs">.env</code>.
             </div>
           )}
           {stale && (
             <p className="mb-3 rounded bg-amber-50 px-3 py-2 text-xs text-amber-700">
-              Showing archived incidents — live results were unavailable.
+              عرض حوادث مؤرشفة — النتائج المباشرة غير متاحة حالياً.
             </p>
           )}
           {loading && (
             <div className="flex items-center gap-2 py-8 text-slate-500">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-red-600" />
-              Loading…
+              جاري التحميل...
             </div>
           )}
-          {!loading && !noKey && items.length === 0 && (
-            <p className="text-slate-500">
-              No recent incidents found. That doesn&apos;t mean safe — just unreported here.
-            </p>
+          {!loading && !noKey && incidents.length === 0 && news.length === 0 && (
+            <p className="text-slate-500 text-sm">لا توجد حوادث أو أخبار حديثة. هذا لا يعني الأمان — فقط أنها غير مبلغ عنها هنا.</p>
           )}
-          <ul className="space-y-4">
-            {items.map((it) => {
-              const unread = !readSet.has(it.url);
-              return (
-                <li key={it.url} className="border-b pb-3 last:border-0">
-                  <div className="flex items-start gap-2">
-                    {unread ? (
-                      <span
-                        className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-red-600"
-                        title="Unread"
-                        aria-label="Unread"
-                      />
-                    ) : (
-                      <span className="mt-1.5 h-2 w-2 shrink-0" aria-hidden />
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <a
-                        href={it.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-red-700 hover:underline"
-                        onClick={() => onArticleOpen(it.url)}
-                      >
-                        {it.title}
-                      </a>
-                      <div className="mt-1 text-xs text-slate-500">
-                        {it.source} · {new Date(it.publishedAt).toLocaleDateString()}
-                      </div>
-                      {it.snippet && <p className="mt-1 text-sm text-slate-600">{it.snippet}</p>}
+
+          {/* Incidents Section */}
+          {incidents.length > 0 && (
+            <section className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-500 flex-shrink-0" />
+                <h2 className="text-sm font-bold uppercase tracking-wide text-red-600">سجل الحوادث الموثقة</h2>
+                <span className="text-xs text-red-400 bg-red-50 px-1.5 py-0.5 rounded-full">{incidents.length}</span>
+              </div>
+              <div className="space-y-3">
+                {incidents.map((inc) => (
+                  <div key={inc.id} className="rounded-lg border border-red-100 bg-gradient-to-l from-red-50/50 to-white px-4 py-3">
+                    <h3 className="text-sm font-bold text-slate-900 leading-snug">{inc.title}</h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{inc.description}</p>
+                    <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                      <span className="font-medium text-red-500">{inc.source}</span>
+                      {inc.sourceDate && <span>· {inc.sourceDate}</span>}
                     </div>
                   </div>
-                </li>
-              );
-            })}
-          </ul>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Divider */}
+          {incidents.length > 0 && news.length > 0 && (
+            <div className="border-t-2 border-slate-100 my-6" />
+          )}
+
+          {/* News Section */}
+          {news.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-500 flex-shrink-0" />
+                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">آخر الأخبار</h2>
+                <span className="text-xs text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full">{news.length}</span>
+              </div>
+              <ul className="space-y-4">
+                {news.map((it) => (
+                  <li key={it.url} className="border-b border-slate-100 pb-3 last:border-0">
+                    <a href={it.url} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-700 hover:underline text-sm">
+                      {it.title}
+                    </a>
+                    <div className="mt-1 text-xs text-slate-400">
+                      {it.source} · {new Date(it.publishedAt).toLocaleDateString("ar-SA")}
+                    </div>
+                    {it.snippet && <p className="mt-1 text-sm text-slate-600 leading-relaxed">{it.snippet}</p>}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </aside>
     </>

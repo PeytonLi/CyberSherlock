@@ -67,32 +67,17 @@ export default function EmailPhishingLesson() {
         متيقظة، ما يجعل التمييز بين الرسالة المشروعة والخطيرة أصعب بكثير.
       </p>
 
-      {/* Image placeholder 1 */}
-      <div className="my-10 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Zm17.25-6.75H3"
-            />
-          </svg>
-        </div>
-        <p className="text-sm font-medium text-slate-600">
-          [الصورة ١] رسم توضيحي: كيف يخصص الذكاء الاصطناعي رسائل التصيّد حسب
-          الفئة المستهدفة
-        </p>
-        <p className="mt-1 text-xs text-slate-400">
-          مكان مخصص لإدراج صورة تُظهر تباين استراتيجيات التصيّد باختلاف الضحايا
-        </p>
-      </div>
+      {/* Image 1: Phishing personalization diagram */}
+      <figure className="my-10">
+        <img
+          src="/phishing-1.png"
+          alt="رسم توضيحي: كيف يخصص الذكاء الاصطناعي رسائل التصيّد حسب الفئة المستهدفة"
+          className="w-full rounded-xl border border-slate-200 shadow-sm"
+        />
+        <figcaption className="mt-3 text-center text-sm text-slate-500">
+          تخصيص الذكاء الاصطناعي لاستراتيجيات التصيّد حسب الفئة المستهدفة
+        </figcaption>
+      </figure>
 
       {/* Section: لاحظ كيف تتفاوت الرسائل المولَّدة */}
       <h2 className="mt-10 text-2xl font-semibold text-slate-900">
@@ -136,31 +121,17 @@ export default function EmailPhishingLesson() {
         رؤيتها والاستيلاء عليها.
       </p>
 
-      {/* Image placeholder 2 */}
-      <div className="my-10 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-            />
-          </svg>
-        </div>
-        <p className="text-sm font-medium text-slate-600">
-          [الصورة ٢] رسم بياني: ارتفاع هجمات التصيّد عالميًا بعد إطلاق ChatGPT
-        </p>
-        <p className="mt-1 text-xs text-slate-400">
-          مكان مخصص لإدراج صورة تُظهر بيانات Statista عن تضاعف هجمات التصيّد
-        </p>
-      </div>
+      {/* Image 2: Phishing surge chart */}
+      <figure className="my-10">
+        <img
+          src="/phishing-2.png"
+          alt="رسم بياني: ارتفاع هجمات التصيّد عالميًا بعد إطلاق ChatGPT"
+          className="w-full rounded-xl border border-slate-200 shadow-sm"
+        />
+        <figcaption className="mt-3 text-center text-sm text-slate-500">
+          تضاعف هجمات التصيّد عالمياً بعد إطلاق ChatGPT
+        </figcaption>
+      </figure>
 
       {/* Section: التصيّد الاحتيالي على نطاق واسع */}
       <h2 className="mt-10 text-2xl font-semibold text-slate-900">

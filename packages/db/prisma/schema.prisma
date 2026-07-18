@@ -28,6 +28,7 @@ model Incident {
   description String
   source      String
   sourceDate  String
+  url         String   @default("")
   topic       String   @default("email-phishing")
   createdAt   DateTime @default(now())
 

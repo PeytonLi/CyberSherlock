@@ -9,16 +9,8 @@ const ARTICLES = [
     label: "كيف يمكن للذكاء الاصطناعي أن ينهار البنية التحتية",
   },
   {
-    href: "/lessons/critical-infrastructure-cyber-attacks",
-    label: "الهجمات الإلكترونية على البنية التحتية الحيوية",
-  },
-  {
     href: "/lessons/email-phishing",
-    label: "التصيد الاحتيالي بالذكاء الاصطناعي",
-  },
-  {
-    href: "/curriculum",
-    label: "قائمة المقالات",
+    label: "مستقبل التصيّد الاحتيالي",
   },
 ];
 
