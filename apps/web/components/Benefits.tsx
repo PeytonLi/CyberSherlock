@@ -14,7 +14,7 @@ const BENEFITS = [
   {
     title: "A community of builders",
     description:
-      "BlueDot has 7,000+ alumni, with many now working at Anthropic, DeepMind, UK AISI, and dozens of organisations working on a safe transition to advanced AI. You will meet people in the field who can open doors for you and pressure-test your thinking.",
+      "CyberSherlock has 7,000+ alumni, with many now working at Anthropic, DeepMind, UK AISI, and dozens of organisations working on a safe transition to advanced AI. You will meet people in the field who can open doors for you and pressure-test your thinking.",
     icon: "\u{1F310}",
   },
 ];

@@ -6,7 +6,9 @@ type NewsItem = { title: string; source: string; url: string; publishedAt: strin
 
 type Props = {
   country: string | null;
+  topic?: string;
   onClose: () => void;
+  onCollapse?: () => void;
   onArticleOpen: (url: string) => void;
   onArticlesLoaded: (country: string, items: NewsItem[]) => void;
   readUrls: string[];
@@ -14,7 +16,9 @@ type Props = {
 
 export default function NewsDrawer({
   country,
+  topic,
   onClose,
+  onCollapse,
   onArticleOpen,
   onArticlesLoaded,
   readUrls,
@@ -29,7 +33,9 @@ export default function NewsDrawer({
     setLoading(true);
     setItems([]);
     setNoKey(false);
-    fetch(`/api/news?country=${encodeURIComponent(country)}`)
+    fetch(
+      `/api/news?country=${encodeURIComponent(country)}&topic=${encodeURIComponent(topic ?? "")}`
+    )
       .then((r) => r.json())
       .then((d) => {
         const next: NewsItem[] = d.items ?? [];
@@ -40,11 +46,16 @@ export default function NewsDrawer({
       })
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
-  }, [country, onArticlesLoaded]);
+  }, [country, topic, onArticlesLoaded]);
 
   const open = !!country;
   const readSet = new Set(readUrls);
   const unreadCount = items.filter((it) => !readSet.has(it.url)).length;
+
+  const drawerLabel =
+    topic === "email-phishing"
+      ? `${country} — AI phishing incidents`
+      : `${country} — AI & infrastructure cyber incidents`;
 
   return (
     <>
@@ -56,18 +67,27 @@ export default function NewsDrawer({
       >
         <div className="flex items-center justify-between border-b p-4">
           <div>
-            <h2 className="text-lg font-semibold">{country} — recent cyber incidents</h2>
+            <h2 className="text-lg font-semibold">{drawerLabel}</h2>
             {!loading && items.length > 0 && (
               <p className="mt-0.5 text-xs text-slate-500">
-                {unreadCount === 0
-                  ? "All caught up"
-                  : `${unreadCount} unread`}
+                {unreadCount === 0 ? "All caught up" : `${unreadCount} unread`}
               </p>
             )}
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            {onCollapse && (
+              <button
+                onClick={onCollapse}
+                className="text-slate-400 hover:text-slate-600 text-sm"
+                title="Collapse inline"
+              >
+                ⤡
+              </button>
+            )}
+            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="p-4">
@@ -92,7 +112,9 @@ export default function NewsDrawer({
             </div>
           )}
           {!loading && !noKey && items.length === 0 && (
-            <p className="text-slate-500">No recent incidents found. That doesn't mean safe — just unreported here.</p>
+            <p className="text-slate-500">
+              No recent incidents found. That doesn&apos;t mean safe — just unreported here.
+            </p>
           )}
           <ul className="space-y-4">
             {items.map((it) => {

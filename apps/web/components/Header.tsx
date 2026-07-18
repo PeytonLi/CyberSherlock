@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const NAV_LINKS = [
   { href: "/", label: "AGI Strategy" },
-  { href: "/curriculum", label: "Curriculum" },
+  { href: "/curriculum", label: "Articles" },
 ];
 
 export default function Header() {
@@ -17,8 +17,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-[#0a1628]">
-          <div className="flex h-7 w-7 items-center justify-center rounded bg-[#0a1628] text-white text-xs font-bold">B</div>
-          BlueDot
+          <div className="flex h-7 w-7 items-center justify-center rounded bg-[#0a1628] text-white text-xs font-bold">C</div>
+          CyberSherlock
         </Link>
 
         <nav className="hidden sm:flex items-center gap-6 text-sm font-medium">

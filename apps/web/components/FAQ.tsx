@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: "Is there funding available?",
-    a: "Yes. See bluedot.org/programs for current grants and how to apply.",
+    a: "Yes. See our programs page for current grants and how to apply.",
   },
   {
     q: "Will I get a certificate?",
@@ -36,8 +36,8 @@ const FAQS = [
     a: "Yes.",
   },
   {
-    q: "Who is BlueDot Impact?",
-    a: "BlueDot is the leading talent accelerator for beneficial AI and societal resilience. We run courses, help people land jobs, organise events around the world, and back people starting new organisations. We have trained thousands of people since 2022. Our alumni now work at Anthropic, DeepMind, UK AISI, and have founded new organisations working on a safe transition to advanced AI.",
+    q: "Who is CyberSherlock?",
+    a: "CyberSherlock is the leading talent accelerator for beneficial AI and societal resilience. We run courses, help people land jobs, organise events around the world, and back people starting new organisations. We have trained thousands of people since 2022. Our alumni now work at Anthropic, DeepMind, UK AISI, and have founded new organisations working on a safe transition to advanced AI.",
   },
 ];
 

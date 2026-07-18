@@ -1,7 +1,15 @@
-import { redirect } from "next/navigation";
+import ArticleList from "@/components/ArticleList";
+import MapSection from "@/components/MapSection";
+import ArticlesSidebar from "@/components/ArticlesSidebar";
 
-export const dynamic = "force-dynamic";
-
-export default function CurriculumPage() {
-  redirect("/curriculum/1/1");
+export default function ArticlesPage() {
+  return (
+    <div className="flex flex-row-reverse">
+      <ArticlesSidebar />
+      <main className="flex-1 min-w-0">
+        <ArticleList />
+        <MapSection topic="critical-infrastructure" />
+      </main>
+    </div>
+  );
 }

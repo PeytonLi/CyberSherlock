@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "BlueDot - AGI Strategy",
+  title: "CyberSherlock - AGI Strategy",
   description: "A cohort-based course on AI strategy, safety, and governance.",
 };
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ThreatMap, { type CountryMetric } from "./ThreatMap";
 import CountryTooltip from "./CountryTooltip";
+import InlineNewsPanel from "./InlineNewsPanel";
 import NewsDrawer from "./NewsDrawer";
 import {
   countNewSinceCheck,
@@ -24,8 +25,9 @@ type ActivityPayload = {
   }[];
 };
 
-export default function MapSection() {
+export default function MapSection({ topic }: { topic?: string }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const [hover, setHover] = useState<{ name: string | null; x: number; y: number }>({
     name: null,
     x: 0,
@@ -81,8 +83,14 @@ export default function MapSection() {
 
   const handleSelect = useCallback((name: string) => {
     setSelected(name);
+    setExpanded(false);
     // Per-device only — clears heat here; other browsers keep their color
     setVisits(markCountryChecked(name));
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setSelected(null);
+    setExpanded(false);
   }, []);
 
   const handleArticleOpen = useCallback((url: string) => {
@@ -118,13 +126,21 @@ export default function MapSection() {
   const hoverMetric = hover.name ? metrics[hover.name] : undefined;
   const hoverActivity = hover.name ? activityByCountry.get(hover.name) : undefined;
 
+  const heading =
+    topic === "email-phishing" ? "AI Phishing Threats — Live Map" : "AI-Enabled Cyber Threats — Live Map";
+  const subtitle =
+    topic === "email-phishing"
+      ? "Click any country to see recent AI-powered phishing and social engineering incidents."
+      : "Click any country to see recent AI-powered and infrastructure-targeting cyber incidents.";
+
   return (
     <section className="border-t border-slate-200 bg-slate-50 px-6 py-12">
       <div className="mx-auto max-w-5xl">
-        <h2 className="mb-2 text-center text-2xl font-semibold">The live global threat map</h2>
-        <p className="mb-4 text-center text-slate-600">
-          Color shows new incidents since you last opened a country on this device. White means
-          none new for you — other devices are unchanged.
+        <h2 className="mb-2 text-center text-2xl font-semibold">{heading}</h2>
+        <p className="mb-4 text-center text-slate-600">{subtitle}</p>
+        <p className="mb-4 text-center text-sm text-slate-500">
+          Color shows new incidents since you last opened a country on this device. White means none
+          new for you — other devices are unchanged.
         </p>
 
         <div className="mb-4 flex flex-wrap items-center justify-center gap-4">
@@ -157,13 +173,23 @@ export default function MapSection() {
           </div>
         </div>
 
-        <ThreatMap
-          selected={selected}
-          onSelect={handleSelect}
-          onHover={(name, x, y) => setHover({ name, x, y })}
-          metrics={metrics}
-          maxNew={maxNew}
-        />
+        <div className="relative">
+          <ThreatMap
+            selected={selected}
+            onSelect={handleSelect}
+            onHover={(name, x, y) => setHover({ name, x, y })}
+            metrics={metrics}
+            maxNew={maxNew}
+          />
+          {selected && !expanded && (
+            <InlineNewsPanel
+              country={selected}
+              topic={topic}
+              onClose={handleClose}
+              onExpand={() => setExpanded(true)}
+            />
+          )}
+        </div>
       </div>
       <CountryTooltip
         name={hover.name}
@@ -175,8 +201,10 @@ export default function MapSection() {
         windowLabel={windowOpt}
       />
       <NewsDrawer
-        country={selected}
-        onClose={() => setSelected(null)}
+        country={expanded ? selected : null}
+        topic={topic}
+        onClose={handleClose}
+        onCollapse={() => setExpanded(false)}
         onArticleOpen={handleArticleOpen}
         onArticlesLoaded={mergeFetchedArticles}
         readUrls={visits.readUrls}

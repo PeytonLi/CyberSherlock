@@ -21,6 +21,20 @@ model Article {
   @@index([country])
 }
 
+model Incident {
+  id          String   @id @default(cuid())
+  country     String
+  title       String
+  description String
+  source      String
+  sourceDate  String
+  topic       String   @default("email-phishing")
+  createdAt   DateTime @default(now())
+
+  @@index([country])
+  @@index([topic])
+}
+
 model Country {
   name       String   @id
   flag       String
