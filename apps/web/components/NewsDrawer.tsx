@@ -4,7 +4,21 @@ import { useEffect, useState } from "react";
 
 type NewsItem = { title: string; source: string; url: string; publishedAt: string; snippet: string };
 
-export default function NewsDrawer({ country, onClose }: { country: string | null; onClose: () => void }) {
+type Props = {
+  country: string | null;
+  onClose: () => void;
+  onArticleOpen: (url: string) => void;
+  onArticlesLoaded: (country: string, items: NewsItem[]) => void;
+  readUrls: string[];
+};
+
+export default function NewsDrawer({
+  country,
+  onClose,
+  onArticleOpen,
+  onArticlesLoaded,
+  readUrls,
+}: Props) {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [stale, setStale] = useState(false);
   const [noKey, setNoKey] = useState(false);
@@ -18,15 +32,19 @@ export default function NewsDrawer({ country, onClose }: { country: string | nul
     fetch(`/api/news?country=${encodeURIComponent(country)}`)
       .then((r) => r.json())
       .then((d) => {
-        setItems(d.items ?? []);
+        const next: NewsItem[] = d.items ?? [];
+        setItems(next);
         setStale(!!d.stale);
         setNoKey(!!d.noKey);
+        onArticlesLoaded(country, next);
       })
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
-  }, [country]);
+  }, [country, onArticlesLoaded]);
 
   const open = !!country;
+  const readSet = new Set(readUrls);
+  const unreadCount = items.filter((it) => !readSet.has(it.url)).length;
 
   return (
     <>
@@ -37,7 +55,16 @@ export default function NewsDrawer({ country, onClose }: { country: string | nul
         }`}
       >
         <div className="flex items-center justify-between border-b p-4">
-          <h2 className="text-lg font-semibold">{country} — recent cyber incidents</h2>
+          <div>
+            <h2 className="text-lg font-semibold">{country} — recent cyber incidents</h2>
+            {!loading && items.length > 0 && (
+              <p className="mt-0.5 text-xs text-slate-500">
+                {unreadCount === 0
+                  ? "All caught up"
+                  : `${unreadCount} unread`}
+              </p>
+            )}
+          </div>
           <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="Close">
             ✕
           </button>
@@ -68,17 +95,39 @@ export default function NewsDrawer({ country, onClose }: { country: string | nul
             <p className="text-slate-500">No recent incidents found. That doesn't mean safe — just unreported here.</p>
           )}
           <ul className="space-y-4">
-            {items.map((it) => (
-              <li key={it.url} className="border-b pb-3 last:border-0">
-                <a href={it.url} target="_blank" rel="noopener noreferrer" className="font-medium text-red-700 hover:underline">
-                  {it.title}
-                </a>
-                <div className="mt-1 text-xs text-slate-500">
-                  {it.source} · {new Date(it.publishedAt).toLocaleDateString()}
-                </div>
-                {it.snippet && <p className="mt-1 text-sm text-slate-600">{it.snippet}</p>}
-              </li>
-            ))}
+            {items.map((it) => {
+              const unread = !readSet.has(it.url);
+              return (
+                <li key={it.url} className="border-b pb-3 last:border-0">
+                  <div className="flex items-start gap-2">
+                    {unread ? (
+                      <span
+                        className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-red-600"
+                        title="Unread"
+                        aria-label="Unread"
+                      />
+                    ) : (
+                      <span className="mt-1.5 h-2 w-2 shrink-0" aria-hidden />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <a
+                        href={it.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-red-700 hover:underline"
+                        onClick={() => onArticleOpen(it.url)}
+                      >
+                        {it.title}
+                      </a>
+                      <div className="mt-1 text-xs text-slate-500">
+                        {it.source} · {new Date(it.publishedAt).toLocaleDateString()}
+                      </div>
+                      {it.snippet && <p className="mt-1 text-sm text-slate-600">{it.snippet}</p>}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </aside>

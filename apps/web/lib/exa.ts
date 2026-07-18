@@ -34,15 +34,20 @@ export async function fetchCyberNews(country: string): Promise<NewsItem[]> {
     return (data.results ?? [])
       .filter((r) => r.url && r.title)
       .map((r) => ({
-        title: r.title as string,
+        title: sanitize(r.title as string),
         source: hostname(r.url as string),
         url: r.url as string,
         publishedAt: (r.publishedDate as string) ?? new Date().toISOString(),
-        snippet: ((r.text as string) ?? "").trim().slice(0, 300),
+        snippet: sanitize(((r.text as string) ?? "").trim().slice(0, 300)),
       }));
   } catch {
     return [];
   }
+}
+
+/** Postgres rejects null bytes in text fields. */
+function sanitize(s: string): string {
+  return s.replace(/\u0000/g, "");
 }
 
 function hostname(url: string): string {
