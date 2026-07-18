@@ -13,10 +13,12 @@ export async function GET(req: NextRequest) {
 
   // When no DATABASE_URL, skip the DB and fetch live every time.
   if (!dbAvailable) {
+    const hasKey = !!process.env.EXA_API_KEY;
     const fetched = await fetchCyberNews(country);
     return NextResponse.json({
       items: fetched.map((n) => ({ ...n, publishedAt: n.publishedAt })),
       stale: false,
+      noKey: !hasKey,
     });
   }
 
@@ -32,9 +34,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ items: rows.map(toItem), stale: false });
     }
 
+    const hasKey = !!process.env.EXA_API_KEY;
     const fetched = await fetchCyberNews(country);
     if (fetched.length === 0) {
-      return NextResponse.json({ items: rows.map(toItem), stale: rows.length > 0 });
+      return NextResponse.json({ items: rows.map(toItem), stale: rows.length > 0, noKey: !hasKey });
     }
 
     await Promise.all(
@@ -62,10 +65,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ items: refreshed.map(toItem), stale: false });
   } catch {
     // DB unavailable at runtime — degrade to live fetch.
+    const hasKey = !!process.env.EXA_API_KEY;
     const fetched = await fetchCyberNews(country);
     return NextResponse.json({
       items: fetched.map((n) => ({ ...n, publishedAt: n.publishedAt })),
       stale: false,
+      noKey: !hasKey,
     });
   }
 }

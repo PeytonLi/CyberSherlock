@@ -7,17 +7,20 @@ type NewsItem = { title: string; source: string; url: string; publishedAt: strin
 export default function NewsDrawer({ country, onClose }: { country: string | null; onClose: () => void }) {
   const [items, setItems] = useState<NewsItem[]>([]);
   const [stale, setStale] = useState(false);
+  const [noKey, setNoKey] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!country) return;
     setLoading(true);
     setItems([]);
+    setNoKey(false);
     fetch(`/api/news?country=${encodeURIComponent(country)}`)
       .then((r) => r.json())
       .then((d) => {
         setItems(d.items ?? []);
         setStale(!!d.stale);
+        setNoKey(!!d.noKey);
       })
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
@@ -41,13 +44,27 @@ export default function NewsDrawer({ country, onClose }: { country: string | nul
         </div>
 
         <div className="p-4">
+          {noKey && (
+            <div className="mb-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <strong>EXA_API_KEY not set.</strong> Live news is unavailable.{" "}
+              <a href="https://exa.ai" target="_blank" rel="noopener noreferrer" className="underline">
+                Get a free key from Exa
+              </a>{" "}
+              and add it to your <code className="rounded bg-amber-100 px-1 text-xs">.env</code>.
+            </div>
+          )}
           {stale && (
             <p className="mb-3 rounded bg-amber-50 px-3 py-2 text-xs text-amber-700">
               Showing archived incidents — live results were unavailable.
             </p>
           )}
-          {loading && <p className="text-slate-500">Loading…</p>}
-          {!loading && items.length === 0 && (
+          {loading && (
+            <div className="flex items-center gap-2 py-8 text-slate-500">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-red-600" />
+              Loading…
+            </div>
+          )}
+          {!loading && !noKey && items.length === 0 && (
             <p className="text-slate-500">No recent incidents found. That doesn't mean safe — just unreported here.</p>
           )}
           <ul className="space-y-4">
