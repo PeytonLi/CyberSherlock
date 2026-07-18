@@ -1,3 +1,11 @@
+import Lesson from "@/components/Lesson";
+import MapSection from "@/components/MapSection";
+
 export default function Home() {
-  return <main className="mx-auto max-w-3xl px-6 py-16">CyberSherlock</main>;
+  return (
+    <main>
+      <Lesson />
+      <MapSection />
+    </main>
+  );
 }
