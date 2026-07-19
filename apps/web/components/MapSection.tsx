@@ -1,15 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ThreatMap from "./ThreatMap";
 import CountryTooltip from "./CountryTooltip";
 import InlineNewsPanel from "./InlineNewsPanel";
 import NewsDrawer from "./NewsDrawer";
+import PinTooltip from "./PinTooltip";
+import { INCIDENTS_BY_TOPIC, type PinIncident } from "@/lib/pin-incidents";
 
 export default function MapSection({ topic }: { topic?: string }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [hover, setHover] = useState<{ name: string | null; x: number; y: number }>({ name: null, x: 0, y: 0 });
+  const [hoveredPin, setHoveredPin] = useState<string | null>(null);
+  const [activePin, setActivePin] = useState<PinIncident | null>(null);
+
+  const pins = useMemo(() => {
+    if (!topic) return [];
+    return INCIDENTS_BY_TOPIC[topic] ?? [];
+  }, [topic]);
 
   const heading = topic === "email-phishing"
     ? "التهديدات السيبرانية المدعومة بالذكاء الاصطناعي — الخريطة التفاعلية"
@@ -20,10 +29,18 @@ export default function MapSection({ topic }: { topic?: string }) {
 
   const handleSelect = (name: string) => {
     setSelected(name);
-    setExpanded(false); // always start inline when clicking a country
+    setActivePin(null);
+    setExpanded(false);
   };
 
   const handleClose = () => {
+    setSelected(null);
+    setActivePin(null);
+    setExpanded(false);
+  };
+
+  const handlePinClick = (pin: PinIncident) => {
+    setActivePin(pin);
     setSelected(null);
     setExpanded(false);
   };
@@ -38,8 +55,15 @@ export default function MapSection({ topic }: { topic?: string }) {
             selected={selected}
             onSelect={handleSelect}
             onHover={(name, x, y) => setHover({ name, x, y })}
+            pins={pins}
+            onPinClick={handlePinClick}
+            hoveredPin={hoveredPin}
+            onPinHover={setHoveredPin}
           />
-          {selected && !expanded && (
+          {activePin && (
+            <PinTooltip pin={activePin} onClose={() => setActivePin(null)} />
+          )}
+          {selected && !expanded && !activePin && (
             <InlineNewsPanel
               country={selected}
               topic={topic}

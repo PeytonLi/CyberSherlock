@@ -30,6 +30,8 @@ model Incident {
   sourceDate  String
   url         String   @default("")
   topic       String   @default("email-phishing")
+  lat         Float    @default(0)
+  lng         Float    @default(0)
   createdAt   DateTime @default(now())
 
   @@index([country])
