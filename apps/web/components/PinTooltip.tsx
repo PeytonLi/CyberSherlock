@@ -2,8 +2,10 @@
 
 import { useRef, useState } from "react";
 import type { PinIncident } from "@/lib/pin-incidents";
+import { useLocaleContext } from "./LocaleProvider";
 
 export default function PinTooltip({ pin, onClose }: { pin: PinIncident; onClose: () => void }) {
+  const { locale, dict } = useLocaleContext();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -36,7 +38,10 @@ export default function PinTooltip({ pin, onClose }: { pin: PinIncident; onClose
   };
 
   return (
-    <div className="absolute top-3 left-3 right-3 z-30 rounded-lg border border-blue-200 bg-white shadow-lg p-4 max-w-none sm:max-w-sm" dir="rtl">
+    <div
+      className="absolute top-3 left-3 right-3 z-30 rounded-lg border border-blue-200 bg-white shadow-lg p-4 max-w-none sm:max-w-sm"
+      dir={locale === "ar" ? "rtl" : "ltr"}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
@@ -76,11 +81,11 @@ export default function PinTooltip({ pin, onClose }: { pin: PinIncident; onClose
                   </div>
                 </div>
               </div>
-              <p className="mt-2 text-[11px] text-slate-400 leading-relaxed">🎧 استمع إلى ملخص الحادث الصوتي</p>
+              <p className="mt-2 text-[11px] text-slate-400 leading-relaxed">🎧 {dict.map.audioHint}</p>
             </div>
           )}
         </div>
-        <button onClick={onClose} className="text-slate-400 hover:text-slate-600 flex-shrink-0">✕</button>
+        <button onClick={onClose} className="text-slate-400 hover:text-slate-600 flex-shrink-0" aria-label={dict.map.close}>✕</button>
       </div>
     </div>
   );

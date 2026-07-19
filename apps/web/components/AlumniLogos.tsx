@@ -1,3 +1,7 @@
+"use client";
+
+import { useLocaleContext } from "./LocaleProvider";
+
 const LOGOS = [
   "Anthropic", "DeepMind", "OpenAI", "UK AISI",
   "US AISI", "METR", "Apollo Research", "Conjecture",
@@ -7,11 +11,13 @@ const LOGOS = [
 ];
 
 export default function AlumniLogos() {
+  const { dict } = useLocaleContext();
+
   return (
     <section className="border-b border-slate-200 bg-white py-10 overflow-hidden">
       <div className="mx-auto max-w-5xl px-6 text-center mb-6">
         <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">
-          Our 8,000+ alumni work at
+          {dict.alumni.label}
         </p>
       </div>
       <div className="relative">

@@ -1,4 +1,10 @@
+"use client";
+
+import { useLocaleContext } from "./LocaleProvider";
+
 export default function Hero() {
+  const { dict } = useLocaleContext();
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#0a1628] via-[#0f1d35] to-[#0a1628] text-white">
       <div
@@ -11,15 +17,13 @@ export default function Hero() {
 
       <div className="relative mx-auto max-w-4xl px-6 py-24 sm:py-32 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#60a5fa] mb-4">
-          Cohort-based Course
+          {dict.hero.eyebrow}
         </p>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-          AGI Strategy
+          {dict.hero.title}
         </h1>
         <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-slate-300">
-          Optimistic and concerned about AI&apos;s trajectory? Want to do something about it?
-          Start here. 25 hours to understand the strategic landscape, find your entry point,
-          and get moving.
+          {dict.hero.body}
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
@@ -28,13 +32,13 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg bg-[#2563eb] px-8 py-3.5 text-base font-semibold text-white hover:bg-[#1d4ed8] transition-colors shadow-lg shadow-blue-600/25"
           >
-            Apply by 20 Jul
+            {dict.hero.applyBy}
           </a>
           <a
             href="#curriculum"
             className="inline-flex items-center gap-2 rounded-lg border border-slate-500 bg-transparent px-8 py-3.5 text-base font-medium text-white hover:border-slate-300 hover:text-slate-100 transition-colors"
           >
-            Browse curriculum
+            {dict.hero.browse}
           </a>
         </div>
       </div>
