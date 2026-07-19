@@ -46,10 +46,10 @@ export default function MapSection({ topic }: { topic?: string }) {
   };
 
   return (
-    <section className="border-t border-slate-200 bg-slate-50 px-6 py-12">
+    <section className="border-t border-slate-200 bg-slate-50 px-4 sm:px-6 py-10 sm:py-12">
       <div className="mx-auto max-w-5xl">
-        <h2 className="mb-2 text-center text-2xl font-semibold">{heading}</h2>
-        <p className="mb-6 text-center text-slate-600">{subtitle}</p>
+        <h2 className="mb-2 text-center text-xl sm:text-2xl font-semibold leading-snug">{heading}</h2>
+        <p className="mb-6 text-center text-sm sm:text-base text-slate-600">{subtitle}</p>
         <div className="relative">
           <ThreatMap
             selected={selected}

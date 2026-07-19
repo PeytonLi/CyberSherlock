@@ -4,12 +4,12 @@ import ArticlesSidebar from "@/components/ArticlesSidebar";
 
 export default function ArticlesPage() {
   return (
-    <div className="flex flex-row-reverse">
+    <div className="flex flex-col md:flex-row-reverse">
       <ArticlesSidebar />
-      <main className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         <ArticleList />
         <MapSection topic="critical-infrastructure" />
-      </main>
+      </div>
     </div>
   );
 }
