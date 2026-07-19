@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getDateLocale } from "@/lib/i18n";
+import { useLocaleContext } from "./LocaleProvider";
 
 type NewsItem = { title: string; source: string; url: string; publishedAt: string; snippet: string };
 type IncidentItem = { id: string; title: string; description: string; source: string; sourceDate: string };
 
 export default function NewsDrawer({ country, topic, onClose, onCollapse }: { country: string | null; topic?: string; onClose: () => void; onCollapse?: () => void }) {
+  const { locale, dict } = useLocaleContext();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [incidents, setIncidents] = useState<IncidentItem[]>([]);
   const [stale, setStale] = useState(false);
   const [noKey, setNoKey] = useState(false);
   const [loading, setLoading] = useState(false);
+  const m = dict.map;
 
   useEffect(() => {
     if (!country) return;
@@ -30,28 +34,30 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [country]);
+  }, [country, topic]);
 
   const open = !!country;
+  const slideClass = locale === "ar"
+    ? open ? "translate-x-0" : "-translate-x-full"
+    : open ? "translate-x-0" : "translate-x-full";
+  const sideClass = locale === "ar" ? "left-0 border-r" : "right-0 border-l";
 
   return (
     <>
       {open && <div className="fixed inset-0 z-40 bg-black/20" onClick={onClose} />}
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-full max-w-md overflow-y-auto border-l border-slate-200 bg-white shadow-xl transition-transform ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-        dir="rtl"
+        className={`fixed top-0 z-50 h-full w-full max-w-md overflow-y-auto border-slate-200 bg-white shadow-xl transition-transform ${sideClass} ${slideClass}`}
+        dir={locale === "ar" ? "rtl" : "ltr"}
       >
         <div className="flex items-center justify-between border-b px-4 py-3 sticky top-0 bg-white z-10">
           <span className="font-semibold text-slate-800">{country}</span>
           <div className="flex items-center gap-2">
             {onCollapse && (
-              <button onClick={onCollapse} className="text-slate-400 hover:text-slate-600 text-sm" title="طي العرض">
+              <button onClick={onCollapse} className="text-slate-400 hover:text-slate-600 text-sm" title={m.collapse}>
                 ⤡
               </button>
             )}
-            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label="إغلاق">
+            <button onClick={onClose} className="text-slate-500 hover:text-slate-900" aria-label={m.close}>
               ✕
             </button>
           </div>
@@ -60,34 +66,31 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
         <div className="p-4">
           {noKey && (
             <div className="mb-4 rounded border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <strong>مفتاح EXA غير مضبوط.</strong> الأخبار المباشرة غير متاحة.{" "}
+              <strong>{m.noKey}</strong>{" "}
               <a href="https://exa.ai" target="_blank" rel="noopener noreferrer" className="underline">
-                احصل على مفتاح مجاني من Exa
+                {m.noKeyHint}
               </a>{" "}
-              وأضفه إلى ملف <code className="rounded bg-amber-100 px-1 text-xs">.env</code>.
+              {m.noKeyEnv}
             </div>
           )}
           {stale && (
-            <p className="mb-3 rounded bg-amber-50 px-3 py-2 text-xs text-amber-700">
-              عرض حوادث مؤرشفة — النتائج المباشرة غير متاحة حالياً.
-            </p>
+            <p className="mb-3 rounded bg-amber-50 px-3 py-2 text-xs text-amber-700">{m.stale}</p>
           )}
           {loading && (
             <div className="flex items-center gap-2 py-8 text-slate-500">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" />
-              جاري التحميل...
+              {m.loading}
             </div>
           )}
           {!loading && !noKey && incidents.length === 0 && news.length === 0 && (
-            <p className="text-slate-500 text-sm">لا توجد حوادث أو أخبار حديثة. هذا لا يعني الأمان — فقط أنها غير مبلغ عنها هنا.</p>
+            <p className="text-slate-500 text-sm">{m.empty}</p>
           )}
 
-          {/* Incidents Section */}
           {incidents.length > 0 && (
             <section className="mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <span className="h-2.5 w-2.5 rounded-full bg-blue-500 flex-shrink-0" />
-                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">سجل الحوادث الموثقة</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">{m.documentedIncidents}</h2>
                 <span className="text-xs text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full">{incidents.length}</span>
               </div>
               <div className="space-y-3">
@@ -105,17 +108,15 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
             </section>
           )}
 
-          {/* Divider */}
           {incidents.length > 0 && news.length > 0 && (
             <div className="border-t-2 border-slate-100 my-6" />
           )}
 
-          {/* News Section */}
           {news.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-3">
                 <span className="h-2.5 w-2.5 rounded-full bg-blue-500 flex-shrink-0" />
-                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">آخر الأخبار</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">{m.latestNews}</h2>
                 <span className="text-xs text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full">{news.length}</span>
               </div>
               <ul className="space-y-4">
@@ -125,7 +126,7 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
                       {it.title}
                     </a>
                     <div className="mt-1 text-xs text-slate-400">
-                      {it.source} · {new Date(it.publishedAt).toLocaleDateString("ar-SA")}
+                      {it.source} · {new Date(it.publishedAt).toLocaleDateString(getDateLocale(locale))}
                     </div>
                     {it.snippet && <p className="mt-1 text-sm text-slate-600 leading-relaxed">{it.snippet}</p>}
                   </li>

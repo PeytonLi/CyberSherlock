@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLocaleContext } from "./LocaleProvider";
 
 type Facts = {
   name: string;
@@ -13,15 +14,16 @@ type Facts = {
 };
 
 export default function CountryTooltip({ name, x, y }: { name: string | null; x: number; y: number }) {
+  const { dict } = useLocaleContext();
   const [facts, setFacts] = useState<Facts | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const m = dict.map;
 
   useEffect(() => {
     if (!name) {
       setFacts(null);
       return;
     }
-    // debounce quick mouse sweeps
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       fetch(`/api/country?name=${encodeURIComponent(name)}`)
@@ -45,18 +47,18 @@ export default function CountryTooltip({ name, x, y }: { name: string | null; x:
         {facts?.flag ? `${facts.flag} ` : ""}
         {name}
       </div>
-      {facts?.capital && <div className="text-slate-600">Capital: {facts.capital}</div>}
+      {facts?.capital && <div className="text-slate-600">{m.capital}: {facts.capital}</div>}
       {facts?.region && (
         <div className="text-slate-600">
-          Region: {facts.region}
+          {m.region}: {facts.region}
           {facts.subregion ? ` · ${facts.subregion}` : ""}
         </div>
       )}
-      {facts?.languages && <div className="text-slate-600">Languages: {facts.languages}</div>}
+      {facts?.languages && <div className="text-slate-600">{m.languages}: {facts.languages}</div>}
       {typeof facts?.population === "number" && facts.population > 0 && (
-        <div className="text-slate-600">Population: {facts.population.toLocaleString()}</div>
+        <div className="text-slate-600">{m.population}: {facts.population.toLocaleString()}</div>
       )}
-      <div className="mt-1 text-xs text-blue-600">انقر لعرض سجل الحوادث والأخبار ←</div>
+      <div className="mt-1 text-xs text-red-600">{m.clickIncidents}</div>
     </div>
   );
 }

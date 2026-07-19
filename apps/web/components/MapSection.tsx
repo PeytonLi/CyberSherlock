@@ -6,26 +6,23 @@ import CountryTooltip from "./CountryTooltip";
 import InlineNewsPanel from "./InlineNewsPanel";
 import NewsDrawer from "./NewsDrawer";
 import PinTooltip from "./PinTooltip";
-import { INCIDENTS_BY_TOPIC, type PinIncident } from "@/lib/pin-incidents";
+import { getPinsForTopic, type PinIncident } from "@/lib/pin-incidents";
+import { useLocaleContext } from "./LocaleProvider";
 
 export default function MapSection({ topic }: { topic?: string }) {
+  const { locale, dict } = useLocaleContext();
   const [selected, setSelected] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
   const [hover, setHover] = useState<{ name: string | null; x: number; y: number }>({ name: null, x: 0, y: 0 });
   const [hoveredPin, setHoveredPin] = useState<string | null>(null);
   const [activePin, setActivePin] = useState<PinIncident | null>(null);
 
-  const pins = useMemo(() => {
-    if (!topic) return [];
-    return INCIDENTS_BY_TOPIC[topic] ?? [];
-  }, [topic]);
+  const pins = useMemo(() => getPinsForTopic(topic, locale), [topic, locale]);
 
-  const heading = topic === "email-phishing"
-    ? "التهديدات السيبرانية المدعومة بالذكاء الاصطناعي — الخريطة التفاعلية"
-    : "هجمات البنية التحتية الحيوية — الخريطة التفاعلية";
-  const subtitle = topic === "email-phishing"
-    ? "انقر على أي دولة لعرض حوادث التصيّد والاختراق الاجتماعي المدعومة بالذكاء الاصطناعي."
-    : "انقر على أي دولة لعرض سجل الحوادث والأخبار الحديثة عن الهجمات السيبرانية على البنية التحتية الحيوية.";
+  const heading =
+    topic === "email-phishing" ? dict.map.phishingHeading : dict.map.infraHeading;
+  const subtitle =
+    topic === "email-phishing" ? dict.map.phishingSubtitle : dict.map.infraSubtitle;
 
   const handleSelect = (name: string) => {
     setSelected(name);
