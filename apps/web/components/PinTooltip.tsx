@@ -36,7 +36,7 @@ export default function PinTooltip({ pin, onClose }: { pin: PinIncident; onClose
   };
 
   return (
-    <div className="absolute top-3 left-3 right-3 z-30 rounded-lg border border-blue-200 bg-white shadow-lg p-4 max-w-sm" dir="rtl">
+    <div className="absolute top-3 left-3 right-3 z-30 rounded-lg border border-blue-200 bg-white shadow-lg p-4 max-w-none sm:max-w-sm" dir="rtl">
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">

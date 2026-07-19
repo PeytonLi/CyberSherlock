@@ -49,9 +49,9 @@ export default function ArticleList() {
   ];
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
+    <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 sm:py-12">
       <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">Articles</p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Reading List</h1>
+      <h1 className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Reading List</h1>
       <p className="mt-3 text-slate-600">Key readings on cybersecurity, AI risk, and critical infrastructure.</p>
 
       <div className="mt-10 space-y-12">

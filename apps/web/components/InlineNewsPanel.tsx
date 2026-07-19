@@ -31,7 +31,7 @@ export default function InlineNewsPanel({ country, topic, onClose, onExpand }: {
 
   if (loading) {
     return (
-      <div className="absolute bottom-4 left-4 right-4 z-30 rounded-lg border border-slate-200 bg-white/95 backdrop-blur shadow-lg p-4">
+      <div className="relative mt-3 sm:absolute sm:mt-0 sm:bottom-4 sm:left-4 sm:right-4 z-30 rounded-lg border border-slate-200 bg-white/95 backdrop-blur shadow-lg p-4">
         <div className="flex items-center gap-2 text-slate-500 text-sm">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" />
           جاري تحميل البيانات...
@@ -43,7 +43,7 @@ export default function InlineNewsPanel({ country, topic, onClose, onExpand }: {
   if (!hasContent) return null;
 
   return (
-    <div className="absolute bottom-4 left-4 right-4 z-30 rounded-lg border border-slate-200 bg-white/95 backdrop-blur shadow-lg max-h-80 overflow-hidden flex flex-col" dir="rtl">
+    <div className="relative mt-3 sm:absolute sm:mt-0 sm:bottom-4 sm:left-4 sm:right-4 z-30 rounded-lg border border-slate-200 bg-white/95 backdrop-blur shadow-lg max-h-56 sm:max-h-80 overflow-hidden flex flex-col" dir="rtl">
       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5 flex-shrink-0">
         <span className="text-sm font-semibold text-slate-800">{country}</span>
         <div className="flex items-center gap-1">

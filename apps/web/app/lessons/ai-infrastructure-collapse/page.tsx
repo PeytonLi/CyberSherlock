@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AIInfrastructureCollapseLesson() {
   return (
     <>
-    <article className="mx-auto max-w-3xl px-6 py-16" dir="rtl" lang="ar">
+    <article className="mx-auto max-w-3xl px-4 sm:px-6 py-10 sm:py-16" dir="rtl" lang="ar">
       {/* Breadcrumb */}
       <nav className="mb-8 text-sm text-slate-500" dir="ltr">
         <Link href="/" className="hover:text-red-600 transition-colors">
@@ -27,7 +27,7 @@ export default function AIInfrastructureCollapseLesson() {
       </p>
 
       {/* Title */}
-      <h1 className="mt-3 text-4xl font-bold leading-tight tracking-tight">
+      <h1 className="mt-3 text-2xl sm:text-4xl font-bold leading-tight tracking-tight">
         كيف يمكن للذكاء الاصطناعي أن يتسبب في انهيار البنية التحتية الحيوية
       </h1>
 

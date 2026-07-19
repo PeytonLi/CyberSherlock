@@ -28,11 +28,11 @@ export default function HowItWorks() {
           {DETAILS.map((d, i) => (
             <div
               key={d.label}
-              className={`flex items-start gap-4 py-5 ${
+              className={`flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 py-5 ${
                 i < DETAILS.length - 1 ? "border-b border-slate-200" : ""
               }`}
             >
-              <div className="min-w-[120px]">
+              <div className="sm:min-w-[120px] sm:flex-shrink-0">
                 <span className="text-sm font-semibold uppercase tracking-wide text-[#2563eb]">
                   {d.label}
                 </span>
