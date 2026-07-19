@@ -53,6 +53,7 @@ export default function ThreatMap({ onSelect, onHover, selected, pins, onPinClic
         </Geographies>
         {pins.map((pin) => {
           const isHovered = hoveredPin === pin.id;
+          const hasAudio = !!pin.audioUrl;
           return (
             <Marker key={pin.id} coordinates={[pin.lng, pin.lat]}>
               <g
@@ -61,8 +62,18 @@ export default function ThreatMap({ onSelect, onHover, selected, pins, onPinClic
                 onMouseLeave={() => onPinHover(null)}
                 style={{ cursor: "pointer" }}
               >
-                <circle r={isHovered ? 7 : 5} fill="#dc2626" stroke="#ffffff" strokeWidth={1.5} />
-                <circle r={isHovered ? 12 : 0} fill="#dc2626" opacity={0.2} />
+                {hasAudio ? (
+                  <>
+                    <circle r={isHovered ? 8 : 6} fill="#dc2626" stroke="#ffffff" strokeWidth={2} />
+                    <circle r={isHovered ? 14 : 0} fill="#dc2626" opacity={0.15} />
+                    <text textAnchor="middle" dy="0.35em" fontSize={isHovered ? 9 : 7} fill="#ffffff" style={{ pointerEvents: "none", fontWeight: "bold" }}>♫</text>
+                  </>
+                ) : (
+                  <>
+                    <circle r={isHovered ? 7 : 5} fill="#dc2626" stroke="#ffffff" strokeWidth={1.5} />
+                    <circle r={isHovered ? 12 : 0} fill="#dc2626" opacity={0.2} />
+                  </>
+                )}
               </g>
             </Marker>
           );

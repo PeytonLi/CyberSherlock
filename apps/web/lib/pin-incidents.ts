@@ -7,6 +7,7 @@ export type PinIncident = {
   lat: number;
   lng: number;
   country: string;
+  audioUrl?: string;
 };
 
 export const INCIDENTS_BY_TOPIC: Record<string, PinIncident[]> = {
@@ -18,7 +19,8 @@ export const INCIDENTS_BY_TOPIC: Record<string, PinIncident[]> = {
   { id: "ci-5", title: "First Ransomware-Linked Death", country: "Germany", description: "Ransomware on Duesseldorf University Hospital forced ambulance diversion, causing the first known ransomware fatality.", source: "ZDNet", sourceDate: "Sep 2020", lat: 51.23, lng: 6.79 },
   { id: "ci-6", title: "SolarWinds Supply Chain Attack", country: "United States of America", description: "Russia SVR compromised SolarWinds software, infiltrating Treasury, State, Homeland Security and other US agencies.", source: "NYT", sourceDate: "Dec 2020", lat: 38.9, lng: -77.04 },
   { id: "ci-7", title: "Industroyer2 Ukraine Grid Attack", country: "Ukraine", description: "Russian Sandworm group deployed Industroyer2 malware to take down Ukraine power grid. Foiled hours before blackouts.", source: "Wired", sourceDate: "Apr 2022", lat: 50.45, lng: 30.52 },
-  { id: "ci-8", title: "AIIMS Delhi Ransomware", country: "India", description: "Ransomware took India premier hospital offline for 2 weeks, forcing manual operations and delaying patient care.", source: "Indian Express", sourceDate: "Nov 2022", lat: 28.57, lng: 77.21 }
+  { id: "ci-8", title: "AIIMS Delhi Ransomware", country: "India", description: "Ransomware took India premier hospital offline for 2 weeks, forcing manual operations and delaying patient care.", source: "Indian Express", sourceDate: "Nov 2022", lat: 28.57, lng: 77.21 },
+  { id: "ci-9", title: "Norway Hydro Power Grid Cyber Intrusion", country: "Norway", description: "Sophisticated cyber intrusion targeting Norway hydroelectric control systems. Attackers probed SCADA networks controlling dam operations at multiple facilities in Telemark region.", source: "NSM Norway", sourceDate: "Aug 2024", lat: 59.91, lng: 10.75, audioUrl: "/norway-incident.mp3" }
   ],
   "email-phishing": [
   { id: "ph-1", title: "Twitter VIP Account Takeover", country: "United States of America", description: "Spear-phishing attack on Twitter employees enabled hackers to hijack celebrity accounts and post a Bitcoin scam.", source: "Wired", sourceDate: "Jul 2020", lat: 37.77, lng: -122.42 },
