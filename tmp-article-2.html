@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مستقبل التصيّد الاحتيالي (Phishing)</title>
+<style>
+  :root{ --ink:#14172b; --ink-soft:#565b72; --line:#e4e5ec; --accent:#2c3e8c; }
+  *{box-sizing:border-box;}
+  body{
+    font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+    color:var(--ink); background:#fff; margin:0;
+    line-height:1.9; font-size:17px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:48px 28px 100px;}
+  .back{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:14px; color:var(--ink-soft); text-decoration:none;
+    margin-bottom:28px;
+  }
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--accent);margin-bottom:10px;}
+  h1{font-size:30px;line-height:1.4;margin:0 0 8px;font-weight:700;}
+  .subtitle{color:var(--ink-soft);font-size:15px;margin-bottom:36px;}
+  h2{font-size:20px;margin:34px 0 12px;font-weight:700;}
+  p{margin:0 0 18px;color:#2c2f42;}
+  ul{margin:0 0 18px;padding-inline-start:22px;}
+  li{margin-bottom:8px;color:#2c2f42;}
+  .callout{
+    background:#f6f7fb;border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;margin:0 0 22px;font-size:15.5px;color:var(--ink-soft);
+  }
+  .source-note{
+    margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--ink-soft);
+  }
+
+  /* ---- Glossary hover term ---- */
+  .term{
+    border-bottom:1.5px dotted var(--accent);
+    color:var(--accent);
+    cursor:help;
+    font-weight:600;
+  }
+  .term:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+  #term-tooltip{
+    position:fixed;
+    width:300px;
+    max-width:calc(100vw - 24px);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 14px 34px rgba(20,23,43,.16);
+    padding:18px 20px;
+    z-index:999;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(6px);
+    transition:opacity .15s ease, transform .15s ease;
+    direction:rtl;
+    text-align:right;
+  }
+  #term-tooltip.visible{opacity:1;visibility:visible;transform:translateY(0);}
+  #term-tooltip .term-ar{font-weight:700;font-size:15.5px;line-height:1.75;color:var(--ink);}
+  #term-tooltip .term-en{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);direction:ltr;text-align:left;line-height:1.6;
+  }
+  #term-tooltip .arrow{
+    position:absolute;width:12px;height:12px;background:#fff;
+    transform:rotate(45deg);
+  }
+  .term-tooltip-close{
+    display:none;
+    position:absolute;
+    top:10px; inset-inline-end:10px;
+    width:24px;height:24px;border-radius:50%;
+    border:none;background:#eef0f5;color:var(--ink-soft);
+    font-size:16px;line-height:1;cursor:pointer;
+    align-items:center;justify-content:center;
+    padding:0;
+  }
+  .term-tooltip-close:hover{background:#dfe1ee;color:var(--ink);}
+  body.touch-ui .term-tooltip-close{display:flex;}
+  body.touch-ui #term-tooltip{padding-top:38px;}
+
+  /* ---- Audio player card ---- */
+  .audio-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:#f6f7fb;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 18px;
+    margin:4px 0 22px;
+  }
+  .audio-play{
+    flex:none;
+    width:46px;height:46px;border-radius:50%;
+    background:var(--accent);
+    border:none;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:#fff;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .audio-play:hover{background:#233270;}
+  .audio-play:active{transform:scale(.94);}
+  .audio-play svg{width:17px;height:17px;}
+  .audio-body{flex:1;min-width:0;}
+  .audio-title{font-size:14.5px;font-weight:600;margin-bottom:2px;}
+  .audio-title-en{
+    font-size:12px;color:var(--ink-soft);margin-bottom:8px;
+    direction:ltr;text-align:right;
+  }
+  .audio-caption{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;}
+  .audio-meta-row{display:flex;align-items:center;gap:10px;}
+  .audio-time{
+    font-size:12px;color:var(--ink-soft);flex:none;min-width:34px;
+    text-align:center;direction:ltr;
+  }
+  .audio-track{
+    flex:1;height:5px;border-radius:3px;background:#dcdeee;
+    position:relative;overflow:hidden;cursor:pointer;
+  }
+  .audio-track-fill{
+    position:absolute;top:0;right:0;height:100%;width:0%;
+    background:var(--accent);border-radius:3px;
+    transition:width .1s linear;
+  }
+  .audio-badge{
+    display:inline-block;
+    font-size:11px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft, #eef0fb);
+    border-radius:5px;padding:2px 8px;margin-inline-start:8px;
+    vertical-align:middle;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="curriculum_prototype_ar.html" target="_self">→ العودة إلى الدرس</a>
+  <div class="eyebrow">The Future of Phishing</div>
+  <h1>مستقبل التصيّد الاحتيالي (Phishing)</h1>
+  <div class="subtitle">كيف يغيّر الذكاء الاصطناعي حجم وتكلفة هجمات التصيّد الاحتيالي عبر البريد الإلكتروني</div>
+
+  <p>يعمل الذكاء الاصطناعي على زيادة حجم وتعقيد هجمات <span class="term" tabindex="0" data-ar="التصيّد الاحتيالي (Phishing) – إرسال رسالة بريد إلكتروني أو رسالة مخادعة تتظاهر بأنها من جهة موثوقة، بهدف خداع المُستقبِل ودفعه للكشف عن معلومات حساسة (مثل كلمات المرور)." data-en="Phishing – Sending a fake, deceptive email or message pretending to be from someone trustworthy, in order to trick the recipient into giving up sensitive information (like passwords).">التصيّد الاحتيالي</span> عبر البريد الإلكتروني، بينما يخفّض بشكل كبير تكلفة تنفيذها.</p>
+
+  <p>التصيّد عبر البريد الإلكتروني - وهو إرسال رسالة مخادعة لخداع الشخص ودفعه لمشاركة معلومات حساسة - قديم قِدَم الإنترنت نفسه. تقليديًا، كان هذا النوع من الهجمات يأخذ شكلين: إما رسائل عامة تُرسَل بأعداد ضخمة، أو رسائل شديدة التخصيص تستهدف عددًا صغيرًا من الأشخاص المهمين (VIP). لكن بفضل تطور الذكاء الاصطناعي، أصبح إنشاء هجمات تصيّد مستهدفة أسهل وأرخص وأسرع من أي وقت مضى - ما يعني أن المجرمين الإلكترونيين يمكنهم معاملة كل شخص وكأنه هدف مهم.</p>
+
+  <p>بما أن أنظمة الذكاء الاصطناعي قادرة على مسح كميات هائلة من المعلومات المتاحة للعامة، فبإمكانها أن تتعرّف بسرعة كبيرة على هوية الشخص، واهتماماته، ونقاط الضعف النفسية التي يمكن استغلالها. وباستخدام هذه المعلومات، يمكنها صياغة رسائل بريد إلكتروني شديدة التخصيص تبدو موثوقة وحقيقية لعين غير متيقظة، ما يجعل التمييز بين الرسالة المشروعة والخطيرة أصعب بكثير.</p>
+
+  <div class="callout">يتضمن المقال الأصلي عرضًا تفاعليًا حيًا يوضّح كيف تختلف رسائل التصيّد المولَّدة باختلاف الهدف. لا يعرض هذا الملخص نصوص رسائل التصيّد الفعلية، حفاظًا على عدم نشر محتوى يمكن استخدامه كأداة خداع حقيقية.</div>
+
+  <h2>لاحظ كيف تتفاوت الرسائل المولَّدة</h2>
+  <p>لا تختلف الرسائل المُولَّدة في محتواها فقط، بل أيضًا في الاستراتيجية المستخدمة لجذب الضحية. فاسم المرسل المزيّف، ونبرة الرسالة وأسلوبها، تتغيّر بحسب الهدف. على سبيل المثال:</p>
+  <ul>
+    <li>الرسائل الموجهة لرياضي مشهور قد تُبرز شراكة تجارية ذات صلة بمنطقته.</li>
+    <li>الرسائل الموجهة لأستاذ جامعي قد تتضمن دعوة لمؤتمر متخصص في مجاله.</li>
+    <li>الرسائل الموجهة لصاحب عمل قد تعرض فرصة شراكة تبدو ذات قيمة.</li>
+  </ul>
+  <p>كما يُلاحظ أن كل رسالة تنتهي برابط يبدو حقيقيًا لملف "لينكدإن" الخاص بالمرسل. لكن الضغط على هذا الرابط يقود الضحية إلى صفحة تسجيل دخول مزيّفة تطلب منه إدخال كلمة مرور حسابه على لينكدإن، والتي يستطيع المهاجمون رؤيتها والاستيلاء عليها.</p>
+
+  <h2>التصيّد الاحتيالي على نطاق واسع</h2>
+
+  <div class="audio-card">
+    <button class="audio-play" aria-label="تشغيل المقطع الصوتي" data-state="paused">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-play"><path d="M8 5v14l11-7z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <div class="audio-body">
+      <div class="audio-title">استمع إلى قصة عن التصيّد الاحتيالي<span class="audio-badge">استمع</span></div>
+      <div class="audio-title-en">Hear a story about Phishing</div>
+      <div class="audio-caption">مقطع صوتي مروي يقدّم قصة واقعية عن التصيّد الاحتيالي.</div>
+      <div class="audio-meta-row">
+        <span class="audio-time audio-elapsed">0:00</span>
+        <div class="audio-track"><div class="audio-track-fill"></div></div>
+        <span class="audio-time audio-duration">1:13</span>
+      </div>
+      <audio class="audio-source" preload="metadata" src="phishing-story.mp3"></audio>
+    </div>
+  </div>
+
+  <p>يُعد التصيّد الاحتيالي، وفقًا لمركز شكاوى جرائم الإنترنت التابع لمكتب التحقيقات الفيدرالي الأمريكي (FBI)، النوع الأكثر شيوعًا من الجرائم الإلكترونية على الإطلاق. ورغم أنه في تصاعد مستمر منذ سنوات، تشير بيانات موقع "ستاتيستا" (Statista) إلى أن عدد هجمات التصيّد على مستوى العالم تضاعف أكثر من مرة خلال العام الذي تلا إطلاق "تشات جي بي تي". كما تشير البيانات إلى أن 91% من جميع الهجمات الإلكترونية تبدأ عبر البريد الإلكتروني.</p>
+  <p>لا يقتصر أثر الذكاء الاصطناعي على تحسين جودة الهجمات الإلكترونية فحسب، بل يزيد أيضًا من عددها، ما سيؤدي إلى تضخم كبير في الخسائر المتعلقة بالأمن السيبراني. وقد أظهرت أبحاث حديثة أن من الممكن اليوم أتمتة عملية التصيّد الاحتيالي بالكامل، وأن أفضل نماذج الذكاء الاصطناعي الحالية تُضاهي أداء الخبراء البشريين في هذه المهمة.</p>
+
+  <h2>ما الذي ينتظرنا</h2>
+  <p>يفتح مليارات الأشخاص رسائل بريدهم الإلكتروني يوميًا. في السابق، لم يكن معظمهم أهدافًا "مجدية" للتصيّد لأن الجهد المطلوب من المجرمين كان يفوق العائد المحتمل. لكن الآن، أصبح بالإمكان صياغة عمليات احتيال معقدة خلال دقائق بدلًا من ساعات، وهو ما يغيّر هذه المعادلة ويجعل الجميع عرضة للخطر.</p>
+  <p>هناك بعض الأدلة على أن الذكاء الاصطناعي يمكن استخدامه أيضًا للدفاع ضد التصيّد الاحتيالي، من خلال الكشف الاستباقي عن النوايا الخبيثة؛ إلا أنه ومع تطور أنظمة الذكاء الاصطناعي شهريًا، لا تزال عمليات الهجوم أسهل بكثير من عمليات الدفاع.</p>
+
+  <div class="source-note">مصدر المقال الأصلي: مدونة BlueDot Impact.</div>
+</div>
+
+<script>
+(function(){
+  const glossary = document.querySelectorAll('.term');
+  if(!glossary.length) return;
+  const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if(isTouch) document.body.classList.add('touch-ui');
+  const tip = document.createElement('div');
+  tip.id = 'term-tooltip';
+  tip.innerHTML = '<button class="term-tooltip-close" type="button" aria-label="إغلاق">×</button><div class="term-ar"></div><div class="term-en"></div><div class="arrow"></div>';
+  document.body.appendChild(tip);
+  const arEl = tip.querySelector('.term-ar');
+  const enEl = tip.querySelector('.term-en');
+  const arrow = tip.querySelector('.arrow');
+  const closeBtn = tip.querySelector('.term-tooltip-close');
+  let current = null;
+
+  function show(el){
+    current = el;
+    arEl.textContent = el.dataset.ar;
+    enEl.textContent = el.dataset.en;
+    tip.classList.add('visible');
+    position(el);
+  }
+  function hide(){ tip.classList.remove('visible'); current = null; }
+  function position(el){
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth || 300;
+    const th = tip.offsetHeight || 120;
+    let top = r.top - th - 14;
+    let below = false;
+    if(top < 10){ top = r.bottom + 14; below = true; }
+    let left = r.left + r.width/2 - tw/2;
+    left = Math.max(12, Math.min(left, window.innerWidth - tw - 12));
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    const arrowLeft = Math.max(14, Math.min(r.left + r.width/2 - left - 6, tw - 26));
+    arrow.style.left = arrowLeft + 'px';
+    if(below){
+      arrow.style.top = '-7px'; arrow.style.bottom = 'auto';
+      arrow.style.borderLeft = 'none'; arrow.style.borderTop = 'none';
+      arrow.style.borderRight = '1px solid var(--line)';
+      arrow.style.borderBottom = '1px solid var(--line)';
+    } else {
+      arrow.style.bottom = '-7px'; arrow.style.top = 'auto';
+      arrow.style.borderRight = 'none'; arrow.style.borderBottom = 'none';
+      arrow.style.borderLeft = '1px solid var(--line)';
+      arrow.style.borderTop = '1px solid var(--line)';
+    }
+  }
+  glossary.forEach(el => {
+    if(isTouch){
+      // Mobile/touch: tap to open, must use the close (×) button to dismiss.
+      el.addEventListener('click', e => { e.stopPropagation(); show(el); });
+    } else {
+      // Desktop: hover to preview; click still works for keyboard/trackpad users.
+      el.addEventListener('mouseenter', () => show(el));
+      el.addEventListener('mouseleave', hide);
+      el.addEventListener('focus', () => show(el));
+      el.addEventListener('blur', hide);
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if(current === el && tip.classList.contains('visible')) hide(); else show(el);
+      });
+    }
+  });
+  closeBtn.addEventListener('click', e => { e.stopPropagation(); hide(); });
+  if(!isTouch){
+    document.addEventListener('click', hide);
+  }
+  window.addEventListener('scroll', () => { if(current) position(current); }, true);
+  window.addEventListener('resize', () => { if(current) position(current); });
+})();
+
+/* ---- Audio player (wired to real <audio> element) ---- */
+(function(){
+  document.querySelectorAll('.audio-card').forEach(card => {
+    const btn = card.querySelector('.audio-play');
+    const iconPlay = card.querySelector('.icon-play');
+    const iconPause = card.querySelector('.icon-pause');
+    const fill = card.querySelector('.audio-track-fill');
+    const track = card.querySelector('.audio-track');
+    const elapsedEl = card.querySelector('.audio-elapsed');
+    const durationEl = card.querySelector('.audio-duration');
+    const audio = card.querySelector('.audio-source');
+    if(!audio) return;
+
+    function formatTime(s){
+      if(!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, '0');
+      return `${m}:${sec}`;
+    }
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      elapsedEl.textContent = formatTime(audio.currentTime);
+      fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    });
+    audio.addEventListener('ended', () => {
+      btn.dataset.state = 'paused';
+      iconPlay.style.display = '';
+      iconPause.style.display = 'none';
+      audio.currentTime = 0;
+      fill.style.width = '0%';
+      elapsedEl.textContent = '0:00';
+    });
+    btn.addEventListener('click', () => {
+      if(audio.paused){
+        audio.play();
+        btn.dataset.state = 'playing';
+        iconPlay.style.display = 'none';
+        iconPause.style.display = '';
+      } else {
+        audio.pause();
+        btn.dataset.state = 'paused';
+        iconPlay.style.display = '';
+        iconPause.style.display = 'none';
+      }
+    });
+    track.addEventListener('click', e => {
+      const r = track.getBoundingClientRect();
+      // RTL: right edge = 0%, left edge = 100%
+      const ratio = (r.right - e.clientX) / r.width;
+      if(isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
+    });
+  });
+})();
+</script>
+</body>
+</html>

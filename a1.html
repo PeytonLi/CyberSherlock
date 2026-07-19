@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كيف يمكن للذكاء الاصطناعي أن يتسبب في انهيار البنية التحتية الحيوية</title>
+<style>
+  :root{ --ink:#14172b; --ink-soft:#565b72; --line:#e4e5ec; --accent:#2c3e8c; }
+  *{box-sizing:border-box;}
+  body{
+    font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+    color:var(--ink); background:#fff; margin:0;
+    line-height:1.9; font-size:17px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:48px 28px 100px;}
+  .back{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:14px; color:var(--ink-soft); text-decoration:none;
+    margin-bottom:28px;
+  }
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--accent);margin-bottom:10px;}
+  h1{font-size:30px;line-height:1.4;margin:0 0 8px;font-weight:700;}
+  .byline{color:var(--ink-soft);font-size:14.5px;margin-bottom:36px;}
+  h2{font-size:20px;margin:34px 0 12px;font-weight:700;}
+  p{margin:0 0 18px;color:#2c2f42;}
+  ul{margin:0 0 18px;padding-inline-start:22px;}
+  li{margin-bottom:8px;color:#2c2f42;}
+  .source-note{
+    margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--ink-soft);
+  }
+
+  /* ---- Glossary hover term ---- */
+  .term{
+    border-bottom:1.5px dotted var(--accent);
+    color:var(--accent);
+    cursor:help;
+    font-weight:600;
+  }
+  .term:focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+  #term-tooltip{
+    position:fixed;
+    width:300px;
+    max-width:calc(100vw - 24px);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 14px 34px rgba(20,23,43,.16);
+    padding:18px 20px;
+    z-index:999;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(6px);
+    transition:opacity .15s ease, transform .15s ease;
+    direction:rtl;
+    text-align:right;
+  }
+  #term-tooltip.visible{opacity:1;visibility:visible;transform:translateY(0);}
+  #term-tooltip .term-ar{font-weight:700;font-size:15.5px;line-height:1.75;color:var(--ink);}
+  #term-tooltip .term-en{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);direction:ltr;text-align:left;line-height:1.6;
+  }
+  #term-tooltip .arrow{
+    position:absolute;width:12px;height:12px;background:#fff;
+    transform:rotate(45deg);
+  }
+  .term-tooltip-close{
+    display:none;
+    position:absolute;
+    top:10px; inset-inline-end:10px;
+    width:24px;height:24px;border-radius:50%;
+    border:none;background:#eef0f5;color:var(--ink-soft);
+    font-size:16px;line-height:1;cursor:pointer;
+    align-items:center;justify-content:center;
+    padding:0;
+  }
+  .term-tooltip-close:hover{background:#dfe1ee;color:var(--ink);}
+  body.touch-ui .term-tooltip-close{display:flex;}
+  body.touch-ui #term-tooltip{padding-top:38px;}
+
+  /* ---- Audio player card ---- */
+  .audio-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:#f6f7fb;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 18px;
+    margin:4px 0 22px;
+  }
+  .audio-play{
+    flex:none;
+    width:46px;height:46px;border-radius:50%;
+    background:var(--accent);
+    border:none;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:#fff;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .audio-play:hover{background:#233270;}
+  .audio-play:active{transform:scale(.94);}
+  .audio-play svg{width:17px;height:17px;}
+  .audio-body{flex:1;min-width:0;}
+  .audio-title{font-size:14.5px;font-weight:600;margin-bottom:2px;}
+  .audio-title-en{
+    font-size:12px;color:var(--ink-soft);margin-bottom:8px;
+    direction:ltr;text-align:right;
+  }
+  .audio-caption{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;}
+  .audio-meta-row{display:flex;align-items:center;gap:10px;}
+  .audio-time{
+    font-size:12px;color:var(--ink-soft);flex:none;min-width:34px;
+    text-align:center;direction:ltr;
+  }
+  .audio-track{
+    flex:1;height:5px;border-radius:3px;background:#dcdeee;
+    position:relative;overflow:hidden;cursor:pointer;
+  }
+  .audio-track-fill{
+    position:absolute;top:0;right:0;height:100%;width:0%;
+    background:var(--accent);border-radius:3px;
+    transition:width .1s linear;
+  }
+  .audio-badge{
+    display:inline-block;
+    font-size:11px;font-weight:700;color:var(--accent);
+    background:#eef0fb;
+    border-radius:5px;padding:2px 8px;margin-inline-start:8px;
+    vertical-align:middle;
+    direction:rtl;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="curriculum_prototype_ar.html" target="_self">→ العودة إلى الدرس</a>
+  <div class="eyebrow">مدونة BlueDot Impact</div>
+  <h1>كيف يمكن للذكاء الاصطناعي أن يتسبب في انهيار البنية التحتية الحيوية</h1>
+  <div class="byline">بقلم: لي ليان آنغ (Li-Lian Ang)</div>
+
+  <div class="audio-card">
+    <button class="audio-play" aria-label="تشغيل المقطع الصوتي" data-state="paused">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-play"><path d="M8 5v14l11-7z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <div class="audio-body">
+      <div class="audio-title">استمع إلى المقال كاملاً هنا<span class="audio-badge">استمع</span></div>
+      <div class="audio-title-en">Listen to the full article here</div>
+      <div class="audio-caption">النسخة الصوتية الكاملة لهذا المقال، مروية من البداية إلى النهاية.</div>
+      <div class="audio-meta-row">
+        <span class="audio-time audio-elapsed">0:00</span>
+        <div class="audio-track"><div class="audio-track-fill"></div></div>
+        <span class="audio-time audio-duration">5:57</span>
+      </div>
+      <audio class="audio-source" preload="metadata" src="full-article-narration.mp3"></audio>
+    </div>
+  </div>
+
+  <p>يعتمد مجتمعنا على <span class="term" tabindex="0" data-ar="البنية التحتية الحيوية – الأنظمة الأساسية التي يعتمد عليها المجتمع لكي يعمل بشكل طبيعي، مثل شبكات الكهرباء، وإمدادات المياه، والمستشفيات، وشبكات النقل." data-en="Critical infrastructure – The essential systems a society depends on to function, such as power grids, water supplies, hospitals, and transportation networks.">بنية تحتية حيوية</span> توفر المياه النظيفة، وتنقل الغذاء من المزارع إلى المتاجر، وتزوّد المنازل والمستشفيات بالكهرباء. وأي انقطاع مؤقت في هذه الخدمات قد يؤدي إلى خسائر بشرية أو اقتصادية جسيمة.</p>
+
+  <h2>هجمات سيبرانية سابقة على البنية التحتية</h2>
+
+  <div class="audio-card">
+    <button class="audio-play" aria-label="تشغيل المقطع الصوتي" data-state="paused">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-play"><path d="M8 5v14l11-7z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" class="icon-pause" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <div class="audio-body">
+      <div class="audio-title">استمع إلى قصة عن التجسس السيبراني<span class="audio-badge">استمع</span></div>
+      <div class="audio-title-en">Listen to a story about cyber-espionage</div>
+      <div class="audio-caption">مقطع صوتي مروي يقدّم مثالًا واقعيًا على التجسس السيبراني.</div>
+      <div class="audio-meta-row">
+        <span class="audio-time audio-elapsed">0:00</span>
+        <div class="audio-track"><div class="audio-track-fill"></div></div>
+        <span class="audio-time audio-duration">1:22</span>
+      </div>
+      <audio class="audio-source" preload="metadata" src="cyber-espionage-story.mp3"></audio>
+    </div>
+  </div>
+
+  <ul>
+    <li>هجوم الفدية على خط أنابيب "كولونيال بايبلاين" أجبر الشركة على إيقاف إمدادات الوقود ودفع فدية قدرها 4.4 مليون دولار.</li>
+    <li>فيروس "نوت بيتيا" (NotPetya) استغل ثغرات في أنظمة ويندوز غير المحدَّثة، وأدى إلى توقف شركة "ميرسك" (المسؤولة عن خُمس الشحن العالمي) لمدة أسبوع، بخسائر تجاوزت 10 مليارات دولار.</li>
+    <li>هجمات روسيا الإلكترونية على شبكة الكهرباء الأوكرانية تسببت في انقطاعات واسعة.</li>
+    <li>هجوم فدية على مستشفى ألماني أجبره على رفض استقبال حالات الطوارئ، ما أدى إلى وفاة مريض بسبب تأخر العلاج.</li>
+  </ul>
+
+  <h2>لماذا الهجمات السيبرانية؟</h2>
+  <p>الهجمات المادية (كتفجير محطة طاقة) واضحة وسهلة النسب لمصدرها، وتُعد إعلان حرب مباشرًا. أما الهجمات السيبرانية فتوفر ثلاث مزايا: إمكانية الإنكار (يصعب إثبات الجهة المسؤولة)، وتكلفة منخفضة جدًا (لا تحتاج سوى حاسوب واتصال بالإنترنت ووقت)، والقدرة على التحكم بحجم الضرر (من تعطيل مؤقت إلى دمار دائم).</p>
+
+  <h2>لماذا لا تنهار البنية التحتية يوميًا؟</h2>
+  <p>لأن اختراق البنية التحتية الحيوية صعب جدًا بسبب طبقات الحماية المتعددة (تقسيم الشبكات، ضوابط الوصول، أنظمة أمان تفشل بأمان). حتى الدول الكبرى تحتاج سنوات لتنفيذ هجوم ناجح؛ فبرمجية "ترايتون" الخبيثة استغرق تطويرها سنتين، والهجوم الروسي على الشبكة الأوكرانية استغرق أكثر من ستة أشهر من التحضير.</p>
+
+  <h2>الذكاء الاصطناعي يقلّص الحاجة إلى الخبرة</h2>
+  <p>تعتمد أغلب البنية التحتية على برمجيات مفتوحة المصدر (97% من التطبيقات)، و81% منها تحتوي ثغرات أمنية خطيرة. ومعظم هذه الثغرات لا تُصلح لأن المصادر المفتوحة يديرها عدد قليل من المتطوعين (91% من المشاريع لم تُحدَّث منذ أكثر من سنتين).</p>
+  <p>كان تحويل هذه الثغرات إلى "سلاح" فعلي أمرًا صعبًا يتطلب فهمًا عميقًا للنظام المستهدف. لكن الذكاء الاصطناعي أصبح قادرًا على أتمتة عملية اكتشاف الثغرات عبر ملايين الأسطر البرمجية، وتطوير رسائل تصيّد إلكتروني (spearphishing) مخصصة وشديدة الإقناع باستخدام بيانات مسروقة عن الموظفين المستهدفين. كما أظهرت أبحاث معهد أمان الذكاء الاصطناعي البريطاني أن المهاجمين يمكنهم "تسميم" بيانات تدريب النماذج بعدد قليل من الوثائق فقط (250 وثيقة)، ما قد يمنحهم أبوابًا خلفية داخل أنظمة الذكاء الاصطناعي التي تستخدمها الجهات المشغِّلة للبنية التحتية.</p>
+
+  <h2>الذكاء الاصطناعي يقلّص الحاجة إلى الوقت</h2>
+  <p>العمليات السيبرانية التقليدية تستغرق سنوات للتخطيط، ما يمنح المدافعين فرصة لاكتشاف الهجوم قبل وقوع الضرر. لكن الذكاء الاصطناعي يختصر هذه العمليات من سنوات إلى أشهر: فقد استخدمت جهات صينية نموذج Claude لأتمتة هجوم استمر 9 أشهر على البنية التحتية الفيتنامية، أضرّ بالاتصالات وقواعد البيانات الحكومية وأنظمة الزراعة.</p>
+  <p>كما أظهر باحثون من Anthropic وجامعة كارنيغي ميلون، باستخدام إطار عمل يُدعى "إنكالمو" (Incalmo)، إمكانية اختراق 50% من شبكات الشركات (25-50 جهازًا) بتكلفة أقل من دولار واحد وخلال 12 إلى 70 دقيقة فقط. كذلك طوّر فريق من جامعة نيويورك برمجية فدية ذاتية التطور بتكلفة 70 سنتًا فقط باستخدام نماذج مفتوحة الوزن وأجهزة عادية.</p>
+  <p>كلما تسارع تنفيذ الهجوم، قلّ الوقت المتاح لأنظمة الأمان للتدخل أو لمشغلي البنية التحتية لاتخاذ القرار الصحيح - وهو أمر بالغ الخطورة في حالات مثل شبكات الكهرباء أو المستشفيات حيث قد لا يكون هناك سوى ثوانٍ للتصرف. وهذا قد يدفع البشر للاعتماد أكثر فأكثر على أنظمة ذكاء اصطناعي دفاعية لاتخاذ قرارات حاسمة - وهو اعتماد يحمل مخاطره الخاصة، إذ يمكن لهجمات "تسميم البيانات" أن تحوّل هذه الأنظمة الدفاعية نفسها إلى نقطة ضعف يستغلها المهاجم.</p>
+
+  <h2>قدرات الذكاء الاصطناعي الهجومية تتحسن بسرعة</h2>
+  <p>لأول مرة، تُثير نماذج متقدمة مثل Claude 4.5 Sonnet وGemini 2.5 Pro قلقًا أمنيًا موثقًا رسميًا بشأن قدراتها في المهام الهجومية السيبرانية. ورغم أن النماذج الحالية لا تستطيع بعد تنفيذ عملية سيبرانية كاملة بشكل مستقل من الاستطلاع إلى الهجوم، فإن الفجوة تتقلص بسرعة، خاصة مع تقنيات مثل "السقالات البرمجية" (scaffolding) التي تربط النماذج بأدوات خارجية وترفع من قدراتها الهجومية بشكل كبير حتى قبل صدور إصدارات أحدث.</p>
+
+  <p>الخلاصة: التوازن الدقيق بين الهجوم والدفاع السيبراني بدأ يميل لصالح المهاجمين. وبالنسبة للبنية التحتية الحيوية، حيث تُحسب الدقائق وتُودي الأخطاء بالأرواح، لم يعد هذا سؤالًا نظريًا، بل سؤالًا حقيقيًا: هل يمكن لمشغلي الشبكات الكهربائية والمستشفيات ومحطات معالجة المياه الدفاع عن أنفسهم ضد هجمات تتحرك أسرع مما يستطيع البشر التفاعل معه؟</p>
+
+  <div class="source-note">المصدر الأصلي متاح على مدونة BlueDot Impact.</div>
+</div>
+
+<script>
+(function(){
+  const glossary = document.querySelectorAll('.term');
+  if(!glossary.length) return;
+  const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if(isTouch) document.body.classList.add('touch-ui');
+  const tip = document.createElement('div');
+  tip.id = 'term-tooltip';
+  tip.innerHTML = '<button class="term-tooltip-close" type="button" aria-label="إغلاق">×</button><div class="term-ar"></div><div class="term-en"></div><div class="arrow"></div>';
+  document.body.appendChild(tip);
+  const arEl = tip.querySelector('.term-ar');
+  const enEl = tip.querySelector('.term-en');
+  const arrow = tip.querySelector('.arrow');
+  const closeBtn = tip.querySelector('.term-tooltip-close');
+  let current = null;
+
+  function show(el){
+    current = el;
+    arEl.textContent = el.dataset.ar;
+    enEl.textContent = el.dataset.en;
+    tip.classList.add('visible');
+    position(el);
+  }
+  function hide(){ tip.classList.remove('visible'); current = null; }
+  function position(el){
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth || 300;
+    const th = tip.offsetHeight || 120;
+    let top = r.top - th - 14;
+    let below = false;
+    if(top < 10){ top = r.bottom + 14; below = true; }
+    let left = r.left + r.width/2 - tw/2;
+    left = Math.max(12, Math.min(left, window.innerWidth - tw - 12));
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    const arrowLeft = Math.max(14, Math.min(r.left + r.width/2 - left - 6, tw - 26));
+    arrow.style.left = arrowLeft + 'px';
+    if(below){
+      arrow.style.top = '-7px'; arrow.style.bottom = 'auto';
+      arrow.style.borderLeft = 'none'; arrow.style.borderTop = 'none';
+      arrow.style.borderRight = '1px solid var(--line)';
+      arrow.style.borderBottom = '1px solid var(--line)';
+    } else {
+      arrow.style.bottom = '-7px'; arrow.style.top = 'auto';
+      arrow.style.borderRight = 'none'; arrow.style.borderBottom = 'none';
+      arrow.style.borderLeft = '1px solid var(--line)';
+      arrow.style.borderTop = '1px solid var(--line)';
+    }
+  }
+  glossary.forEach(el => {
+    if(isTouch){
+      // Mobile/touch: tap to open, must use the close (×) button to dismiss.
+      el.addEventListener('click', e => { e.stopPropagation(); show(el); });
+    } else {
+      // Desktop: hover to preview; click still works for keyboard/trackpad users.
+      el.addEventListener('mouseenter', () => show(el));
+      el.addEventListener('mouseleave', hide);
+      el.addEventListener('focus', () => show(el));
+      el.addEventListener('blur', hide);
+      el.addEventListener('click', e => {
+        e.stopPropagation();
+        if(current === el && tip.classList.contains('visible')) hide(); else show(el);
+      });
+    }
+  });
+  closeBtn.addEventListener('click', e => { e.stopPropagation(); hide(); });
+  if(!isTouch){
+    document.addEventListener('click', hide);
+  }
+  window.addEventListener('scroll', () => { if(current) position(current); }, true);
+  window.addEventListener('resize', () => { if(current) position(current); });
+})();
+
+/* ---- Audio player (wired to real <audio> element) ---- */
+(function(){
+  document.querySelectorAll('.audio-card').forEach(card => {
+    const btn = card.querySelector('.audio-play');
+    const iconPlay = card.querySelector('.icon-play');
+    const iconPause = card.querySelector('.icon-pause');
+    const fill = card.querySelector('.audio-track-fill');
+    const track = card.querySelector('.audio-track');
+    const elapsedEl = card.querySelector('.audio-elapsed');
+    const durationEl = card.querySelector('.audio-duration');
+    const audio = card.querySelector('.audio-source');
+    if(!audio) return;
+
+    function formatTime(s){
+      if(!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60).toString().padStart(2, '0');
+      return `${m}:${sec}`;
+    }
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      elapsedEl.textContent = formatTime(audio.currentTime);
+      fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    });
+    audio.addEventListener('ended', () => {
+      btn.dataset.state = 'paused';
+      iconPlay.style.display = '';
+      iconPause.style.display = 'none';
+      audio.currentTime = 0;
+      fill.style.width = '0%';
+      elapsedEl.textContent = '0:00';
+    });
+    btn.addEventListener('click', () => {
+      if(audio.paused){
+        audio.play();
+        btn.dataset.state = 'playing';
+        iconPlay.style.display = 'none';
+        iconPause.style.display = '';
+      } else {
+        audio.pause();
+        btn.dataset.state = 'paused';
+        iconPlay.style.display = '';
+        iconPause.style.display = 'none';
+      }
+    });
+    track.addEventListener('click', e => {
+      const r = track.getBoundingClientRect();
+      // RTL: right edge = 0%, left edge = 100%
+      const ratio = (r.right - e.clientX) / r.width;
+      if(isFinite(audio.duration)) audio.currentTime = Math.max(0, Math.min(1, ratio)) * audio.duration;
+    });
+  });
+})();
+</script>
+</body>
+</html>
