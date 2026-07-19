@@ -74,7 +74,7 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
           )}
           {loading && (
             <div className="flex items-center gap-2 py-8 text-slate-500">
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-red-600" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-blue-600" />
               جاري التحميل...
             </div>
           )}
@@ -86,17 +86,17 @@ export default function NewsDrawer({ country, topic, onClose, onCollapse }: { co
           {incidents.length > 0 && (
             <section className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-500 flex-shrink-0" />
-                <h2 className="text-sm font-bold uppercase tracking-wide text-red-600">سجل الحوادث الموثقة</h2>
-                <span className="text-xs text-red-400 bg-red-50 px-1.5 py-0.5 rounded-full">{incidents.length}</span>
+                <span className="h-2.5 w-2.5 rounded-full bg-blue-500 flex-shrink-0" />
+                <h2 className="text-sm font-bold uppercase tracking-wide text-blue-600">سجل الحوادث الموثقة</h2>
+                <span className="text-xs text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full">{incidents.length}</span>
               </div>
               <div className="space-y-3">
                 {incidents.map((inc) => (
-                  <div key={inc.id} className="rounded-lg border border-red-100 bg-gradient-to-l from-red-50/50 to-white px-4 py-3">
+                  <div key={inc.id} className="rounded-lg border border-blue-100 bg-gradient-to-l from-blue-50/50 to-white px-4 py-3">
                     <h3 className="text-sm font-bold text-slate-900 leading-snug">{inc.title}</h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{inc.description}</p>
                     <div className="mt-2 flex items-center gap-2 text-xs text-slate-400">
-                      <span className="font-medium text-red-500">{inc.source}</span>
+                      <span className="font-medium text-blue-500">{inc.source}</span>
                       {inc.sourceDate && <span>· {inc.sourceDate}</span>}
                     </div>
                   </div>

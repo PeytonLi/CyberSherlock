@@ -56,7 +56,7 @@ export default function CountryTooltip({ name, x, y }: { name: string | null; x:
       {typeof facts?.population === "number" && facts.population > 0 && (
         <div className="text-slate-600">Population: {facts.population.toLocaleString()}</div>
       )}
-      <div className="mt-1 text-xs text-red-600">انقر لعرض سجل الحوادث والأخبار ←</div>
+      <div className="mt-1 text-xs text-blue-600">انقر لعرض سجل الحوادث والأخبار ←</div>
     </div>
   );
 }
